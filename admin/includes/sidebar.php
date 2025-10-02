@@ -46,26 +46,16 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#sidebarLayouts">
+                    <a href="view-categories.php">
                         <i class="fas fa-th-list"></i>
-                        <p>Sidebar Layouts</p>
+                        <p>Categories</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#forms">
+                    <a href="view-posts.php">
                         <i class="fas fa-pen-square"></i>
-                        <p>Forms</p>
-                        <span class="caret"></span>
+                        <p>Posts</p>
                     </a>
-                    <div class="collapse" id="forms">
-                        <ul class="nav nav-collapse">
-                            <li>
-                                <a href="forms/forms.html">
-                                    <span class="sub-item">Basic Form</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
                 </li>
                 <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#tables">
