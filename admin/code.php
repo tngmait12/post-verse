@@ -69,7 +69,7 @@ if(isset($_POST['update_user'])){
 if(isset($_POST['delete_user'])){
     $user_id = mysqli_real_escape_string($con, $_POST['delete_user']);
 
-    $query = "DELETE FROM users WHERE id='$user_id' ";
+    $query = "UPDATE users SET status='2' WHERE id='$user_id' ";
     $query_run = mysqli_query($con, $query);
 
     if($query_run){
@@ -192,16 +192,82 @@ if(isset($_POST['add_post'])){
             move_uploaded_file($_FILES['image']['tmp_name'], "../uploads/posts/".$filename);
         }
         $_SESSION['message'] = "Post Added Successfully";
-        header('Location: add-post.php');
+        header('Location: view-posts.php');
         exit(0);
     }else{
         $_SESSION['message'] = "Post Not Added";
         header('Location: add-post.php');
         exit(0);
     }
-}else{
-    $_SESSION['message'] = "Something Went Wrong";
-    header('Location: add-post.php');
-    exit(0);
+}
+
+if(isset($_POST['edit_post'])){
+    $post_id = $_POST['post_id'];
+    $category_id = $_POST['category_id'];
+    $name = $_POST['name'];
+    $slug = $_POST['slug'];
+    $description = $_POST['description'];
+    $meta_title = $_POST['meta_title'];
+    $meta_description = $_POST['meta_description'];
+    $meta_keyword = $_POST['meta_keyword'];
+    $status = $_POST['status'] == true ? '1':'0';
+
+    $new_image = $_FILES['image']['name'];
+    $old_image = $_POST['old_image'];
+
+    if($new_image != NULL){
+        $image_extension = pathinfo($new_image, PATHINFO_EXTENSION);
+        $filename = time().'.'.$image_extension;
+    }else{
+        $filename = $old_image;
+    }
+
+    $query = "UPDATE posts SET name='$name', slug='$slug', description='$description', image='$filename', meta_title='$meta_title', 
+    meta_description='$meta_description', meta_keyword='$meta_keyword', status='$status', category_id='$category_id' WHERE id='$post_id' ";
+    $query_run = mysqli_query($con, $query);
+
+    if($query_run){
+        if($new_image != NULL){
+            if(file_exists("../uploads/posts/".$old_image)){
+                unlink("../uploads/posts/".$old_image);
+            }
+            move_uploaded_file($_FILES['image']['tmp_name'], "../uploads/posts/".$filename);
+        }
+        $_SESSION['message'] = "Post Updated Successfully";
+        header('Location: view-posts.php');
+        exit(0);
+    }
+    else{
+        $_SESSION['message'] = "Post Not Updated";
+        header('Location: edit-post.php?id='.$post_id);
+        exit(0);
+    }
+}
+
+if(isset($_POST['delete_post'])){
+    $post_id = mysqli_real_escape_string($con, $_POST['delete_post']);
+
+    $check_img_query = "SELECT * FROM posts WHERE id='$post_id' LIMIT 1";
+    $img_res = mysqli_query($con, $check_img_query);
+    $res_data = mysqli_fetch_array($img_res);
+    $image = $res_data['image'];
+
+    $query = "DELETE FROM posts WHERE id='$post_id' LIMIT 1";
+    $query_run = mysqli_query($con, $query);
+
+    if($query_run){
+        if(file_exists("../uploads/posts/".$image)){
+            unlink("../uploads/posts/".$image);
+        }
+
+        $_SESSION['message'] = "Post Deleted Successfully";
+        header('Location: view-posts.php');
+        exit(0);
+    }
+    else{
+        $_SESSION['message'] = "Post Not Deleted";
+        header('Location: view-posts.php');
+        exit(0);
+    }
 }
 ?>
