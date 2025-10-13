@@ -88,7 +88,11 @@ if(isset($_POST['delete_user'])){
 
 if(isset($_POST['add_category'])){
     $name = $_POST['name'];
-    $slug = $_POST['slug'];
+
+    $string = preg_replace('/[^A-Za-z0-9\-]/','-',$_POST['slug']); //Remove all special character
+    $final_string = preg_replace('/-+/','-',$string);
+    $slug = $final_string;
+
     $description = $_POST['description'];
     $meta_title = $_POST['meta_title'];
     $meta_description = $_POST['meta_description'];
@@ -124,7 +128,11 @@ if(isset($_POST['add_category'])){
 if(isset($_POST['update_category'])){
     $cat_id = $_POST['cat_id'];
     $name = $_POST['name'];
-    $slug = $_POST['slug'];
+
+    $string = preg_replace('/[^A-Za-z0-9\-]/','-',$_POST['slug']); //Remove all special character
+    $final_string = preg_replace('/-+/','-',$string);
+    $slug = $final_string;
+
     $description = $_POST['description'];
     $meta_title = $_POST['meta_title'];
     $meta_description = $_POST['meta_description'];
@@ -171,7 +179,11 @@ if(isset($_POST['add_post'])){
     $category_id = $_POST['category_id'];
     $user_id = $_SESSION['auth_user']['user_id'];
     $name = $_POST['name'];
-    $slug = $_POST['slug'];
+
+    $string = preg_replace('/[^A-Za-z0-9\-]/','-',$_POST['slug']); //Remove all special character
+    $final_string = preg_replace('/-+/','-',$string);
+    $slug = $final_string;
+
     $description = $_POST['description'];
     $meta_title = $_POST['meta_title'];
     $meta_description = $_POST['meta_description'];
@@ -205,7 +217,11 @@ if(isset($_POST['edit_post'])){
     $post_id = $_POST['post_id'];
     $category_id = $_POST['category_id'];
     $name = $_POST['name'];
-    $slug = $_POST['slug'];
+    
+    $string = preg_replace('/[^A-Za-z0-9\-]/','-',$_POST['slug']); //Remove all special character
+    $final_string = preg_replace('/-+/','-',$string);
+    $slug = $final_string;
+
     $description = $_POST['description'];
     $meta_title = $_POST['meta_title'];
     $meta_description = $_POST['meta_description'];

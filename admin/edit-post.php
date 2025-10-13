@@ -66,7 +66,7 @@ include('includes/header.php');
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="description" class="fw-bold">Description</label>
-                                                    <textarea name="description"><?= $post_data['description']; ?></textarea>
+                                                    <textarea id="your_summernote" name="description"><?= $post_data['description']; ?></textarea>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="meta_title" class="fw-bold">Meta title</label>
@@ -111,6 +111,7 @@ include('includes/header.php');
                                                     <div class="form-check">
                                                         <label class="form-check-label">Status</label>
                                                         <input class="form-check-input" name="status" <?= $post_data['status'] == '1' ? 'checked' : '' ?> type="checkbox">
+                                                        Checked = Hidden, Unchecked = Visible
                                                     </div>
                                                 </div>
                                                 <div class="card-action">

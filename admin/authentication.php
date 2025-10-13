@@ -10,7 +10,7 @@ if(!isset($_SESSION['auth']))
     exit(0);
 }else
 {
-    if($_SESSION['auth_role'] != "1")
+    if($_SESSION['auth_role'] != "1" && $_SESSION['auth_role'] != "2")
     {
         $_SESSION['message'] = "You are not authorized to access this page.";
         header("Location: ../index.php");

@@ -69,7 +69,11 @@ include('includes/header.php');
                                                 <td>
                                                     <img src="../uploads/posts/<?= $post['image'] ?>" width="100px" height="70px" alt="<?= $post['name'] ?>">
                                                 </td>
-                                                <td><?= $post['description'] ?></td>
+                                                <td style="overflow: hidden;
+  line-height: 1.4em;
+  max-height: calc(1.4em * 6);
+  white-space: normal;"><?= $post['description'] ?>
+                                                    </td>
                                                 <td><?= $post['category_id'] ?></td>
                                                 <td>
                                                     <?= $post['status'] == 0 ? "Visible" : "Hidden" ?>

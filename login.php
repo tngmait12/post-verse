@@ -1,4 +1,20 @@
-<?php session_start(); include('includes/header.php'); ?>
+<?php
+
+include('includes/config.php');
+
+$page_title = "Login Page";
+$meta_description = "This is Login page of PHP Blog Website";
+$meta_keyword = "PHP, Blog, Website, HTML, CSS, JS, BOOTSTRAP";
+
+include('includes/header.php'); 
+
+if(isset($_SESSION['auth']))
+{
+    $_SESSION['message'] = "You are already logged in";
+    header('Location: index.php');
+    exit(0);
+}
+?>
 
 <section class="py-5">
   <div class="container">

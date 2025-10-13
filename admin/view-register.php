@@ -1,5 +1,6 @@
 <?php
 include('authentication.php');
+// include('middleware/superadminAuth.php');
 include('includes/header.php');
 ?>
 
@@ -57,7 +58,7 @@ include('includes/header.php');
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $query = "SELECT * FROM users";
+                                    $query = "SELECT * FROM users WHERE status != '2' ";
                                     $query_run = mysqli_query($con, $query);
                                     if (mysqli_num_rows($query_run) > 0) {
                                         foreach ($query_run as $user) {

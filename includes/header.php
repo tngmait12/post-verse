@@ -3,7 +3,11 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Blogge | Personal Blog Site</title>
+  <!-- <title>Blogge | Personal Blog Site</title> -->
+  <title><?php if(isset($page_title)) echo "$page_title"; else {echo "PostVerse Blog Website";} ?></title>
+  <meta name="description" content="<?php if(isset($meta_description)) {echo "$meta_description";} ?>" />
+  <meta name="keyword" content="<?php if(isset($meta_keyword)) {echo "$meta_keyword";} ?>" />
+  <meta name="author" content="Blue" />
 
   <!--Meta For No Index-->
   <meta name="robots" content="noindex, Nofollow, Noimageindex">

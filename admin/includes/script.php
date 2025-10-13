@@ -59,21 +59,21 @@
       });
     </script>
     <script>
-      $(document).ready(function () {
+      $(document).ready(function() {
         $("#basic-datatables").DataTable({});
 
         $("#multi-filter-select").DataTable({
           pageLength: 5,
-          initComplete: function () {
+          initComplete: function() {
             this.api()
               .columns()
-              .every(function () {
+              .every(function() {
                 var column = this;
                 var select = $(
-                  '<select class="form-select"><option value=""></option></select>'
-                )
+                    '<select class="form-select"><option value=""></option></select>'
+                  )
                   .appendTo($(column.footer()).empty())
-                  .on("change", function () {
+                  .on("change", function() {
                     var val = $.fn.dataTable.util.escapeRegex($(this).val());
 
                     column
@@ -85,7 +85,7 @@
                   .data()
                   .unique()
                   .sort()
-                  .each(function (d, j) {
+                  .each(function(d, j) {
                     select.append(
                       '<option value="' + d + '">' + d + "</option>"
                     );
@@ -102,7 +102,7 @@
         var action =
           '<td> <div class="form-button-action"> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task"> <i class="fa fa-edit"></i> </button> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove"> <i class="fa fa-times"></i> </button> </div> </td>';
 
-        $("#addRowButton").click(function () {
+        $("#addRowButton").click(function() {
           $("#add-row")
             .dataTable()
             .fnAddData([
@@ -115,5 +115,18 @@
         });
       });
     </script>
-  </body>
-</html>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $("#your_summernote").summernote();
+        $('.dropdown-toggle').dropdown();
+    });
+</script> -->
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <script>
+      CKEDITOR.replace('description');
+    </script>
+    </body>
+
+    </html>
