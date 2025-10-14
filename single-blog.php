@@ -16,20 +16,15 @@
 <section class="blog-single">
   <div class="container">
     <div class="row">
-      <div class="col-lg-2 order-2 order-lg-1">
-        <div class="share-now">
-          <a href="#" class="scrol">Share</a>
-          <div class="sociel-icon">
-            <ul>
-              <li> <a href="#"><i class="fa fa-facebook"></i></a></li>
-              <li> <a href="#"><i class="fa fa-twitter"></i></a></li>
-              <li> <a href="#"><i class="fa fa-instagram"></i></a></li>
-              <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-            </ul>
+      <div class="col-lg-4 order-2 order-lg-2">
+        <div class="comments h-100 border p-2" style="border-color: black; border-radius: 20px; border-width: 20px;">
+          <h3 class="text-center border-bottom">Comments</h3>
+          <div class="">
+            sfshfjhdfjk
           </div>
         </div>
       </div>
-      <div class="col-lg-10 order-1 order-lg-2">
+      <div class="col-lg-8 order-1 order-lg-1">
         <article class="single-blog">
           <a href="#" class="tag">Travel</a>
           <p class="title"><?= $post_result['name'] ?></p>
@@ -45,64 +40,7 @@
           </ul>
           <!-- <img src="images/featured-post.jpg"alt="banner"> -->
           <img src="uploads/posts/<?= $post_result['image'] ?>" width="100%" alt="banner">
-
-          <!-- <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-            et dolore magna aliquyam erat, sed diam voluptua. At vero eos accusam et justo duo dolores ea rebum. Stet
-            clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
-            <br>
-            <br>
-
-            consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-            sed diam voluptua. At vero eos et accusam et justo duo dolores ea rebum. Stet clita kasd gubergren, no sea
-            takimata sanctus est Lorem ipsum dolor sit amet. <br> <br>
-
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-            dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
-            clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
-            <br>
-            <br>
-
-            consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-            sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no
-            sea takimata sanctus est Lorem ipsum dolor sit amet.
-          </p>
-          <h3>Make better business</h3>
-          <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-            et dolore magna aliquyam erat, sed diam voluptua. At vero eos accusam et justo duo dolores ea rebum. Stet
-            clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
-            <br> <br>
-
-            consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-            sed diam voluptua. At vero eos et accusam et justo duo dolores ea rebum. Stet clita kasd gubergren, no sea
-            takimata sanctus est Lorem ipsum dolor sit amet.
-          </p>
-          <blockquote>
-            <p>"You’ve got to get up every morning with determination if you’re going to go to bed with satisfaction."
-            </p>
-          </blockquote>
-          <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-            et dolore magna aliquyam erat, sed diam voluptua. At vero eos accusam et justo duo dolores ea rebum. Stet
-            clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
-            <br> <br>
-            consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-            sed diam voluptua. At vero eos et accusam et justo duo dolores ea rebum. Stet clita kasd gubergren, no sea
-            takimata sanctus est Lorem ipsum dolor sit amet.
-          </p>
-          <div class="single-blog-banner">
-            <div class="banner"> <img src="images/blog/single-blog.png" alt="banner">
-            </div>
-            <div class="banner"> <img src="images/blog/single-blog-2.png" alt="banner">
-            </div>
-          </div>
-          <h3>The Dreamy Factors</h3>
-          <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-            et dolore magna aliquyam erat, sed diam voluptua. At vero eos accusam et justo duo dolores ea rebum. Stet
-            clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
-            <br> <br>
-            consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-            sed diam voluptua. At vero eos et accusam et justo duo dolores ea rebum. Stet clita kasd gubergren, no sea
-            takimata sanctus est Lorem ipsum dolor sit amet.
-          </p> -->
+          
           <div style="display: block;"><?= $post_result['description'] ?></div>
         </article>
         
