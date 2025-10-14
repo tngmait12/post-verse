@@ -14,13 +14,13 @@
       <!-- Navigation Links -->
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link" href="index.html">Home </a>
+          <a class="nav-link" href="index.php">Home </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="about.html">About </a>
+          <a class="nav-link" href="about.php">About </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="contact.html">Contact</a>
+          <a class="nav-link" href="contact.php">Contact</a>
         </li>
         <!-- Authentication Links -->
         <?php if (isset($_SESSION['auth'])) : ?>
