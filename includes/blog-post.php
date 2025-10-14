@@ -1,9 +1,7 @@
 <?php
     $page = $_GET["page"] ?? 1;
 
-    include('admin/config/dbcon.php');
-
-    define('POSTS_IN_PAGE', 1);
+    define('POSTS_IN_PAGE', 3);
 
     $count_post = "SELECT COUNT(*) AS count FROM posts WHERE status = 0";
     $count = (int)mysqli_query($con, $count_post)->fetch_assoc()['count'];
@@ -57,7 +55,7 @@
                     </ul>
                 </div>
                 <p>
-                    <?= $row['description'] ?>
+                    <?= $row['meta_description'] ?>
                 </p>
                 <a href="single-blog.php?slug=<?php echo $row['slug'] ?>" class="blog-post-action">read more <i class="fa fa-angle-right"></i></a>
             </div>

@@ -1,7 +1,7 @@
 <?php 
   $slug = $_GET["slug"] ?? '';
 
-  include 'admin/config/dbcon.php';
+  include('includes/config.php');
 
   $stmt = mysqli_prepare($con,'SELECT p.*, u.fname, u.lname FROM posts AS p JOIN users AS u ON p.user_id = u.id WHERE slug = ?');
   mysqli_stmt_bind_param($stmt,'s', $slug);
