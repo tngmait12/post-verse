@@ -13,7 +13,7 @@ include('includes/header.php');
           <h2>Articles</h2>
           <p>View the latest news on Blogger</p>
         </div>
-        <article class="blog-post">
+        <!-- <article class="blog-post">
           <div class="blog-post-thumb">
             <img src="images/blog/blog-thum-1.png" alt="blog-thum" />
           </div>
@@ -213,6 +213,7 @@ include('includes/header.php');
             <a href="single-blog.html" class="blog-post-action">read more <i class="fa fa-angle-right"></i></a>
           </div>
         </article>
+        
         <div class="blog-post-pagination">
           <nav aria-label="Page navigation example" class="nav-bg">
             <ul class="pagination">
@@ -229,7 +230,8 @@ include('includes/header.php');
               </li>
             </ul>
           </nav>
-        </div>
+        </div> -->
+        <?php include('includes/blog-post.php') ?>
       </div>
       <div class="col-lg-4">
         <div class="blog-post-widget">
