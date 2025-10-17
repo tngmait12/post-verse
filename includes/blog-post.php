@@ -8,10 +8,6 @@
 
     $pagination = ceil($count / POSTS_IN_PAGE);
 
-    // $post_query = "SELECT * FROM posts AS p JOIN users AS u ON p.user_id = u.id";
-    // $result = mysqli_query($con, $post_query);
-    // $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
     $query = 'SELECT p.*, u.fname, u.lname 
         FROM posts AS p 
         JOIN users AS u ON p.user_id = u.id 

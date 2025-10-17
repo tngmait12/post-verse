@@ -10,21 +10,20 @@
   $post_result = mysqli_fetch_assoc($result);
 
   include('includes/header.php');
+  
+  header("single-blog.php?slug=" . urldecode($slug));
 ?>
 
 <body>
 <section class="blog-single">
-  <div class="container">
+  <div class="container sticky">
     <div class="row">
-      <div class="col-lg-4 order-2 order-lg-2">
-        <div class="comments h-100 border p-2" style="border-color: black; border-radius: 20px; border-width: 20px;">
-          <h3 class="text-center border-bottom">Comments</h3>
-          <div class="">
-            sfshfjhdfjk
-          </div>
+      <div class="col-lg-5 order-2 order-lg-2">
+        <div id="comments-section" class="border p-2 d-flex flex-column" style="border-color: black; border-radius: 20px; border-width: 20px;">
+          <?php include "section/comment.php" ?>
         </div>
       </div>
-      <div class="col-lg-8 order-1 order-lg-1">
+      <div class="col-lg-7 order-1 order-lg-1">
         <article class="single-blog">
           <a href="#" class="tag">Travel</a>
           <p class="title"><?= $post_result['name'] ?></p>
@@ -38,7 +37,6 @@
               ?>
             </li>
           </ul>
-          <!-- <img src="images/featured-post.jpg"alt="banner"> -->
           <img src="uploads/posts/<?= $post_result['image'] ?>" width="100%" alt="banner">
           
           <div style="display: block;"><?= $post_result['description'] ?></div>
