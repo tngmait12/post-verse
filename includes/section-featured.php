@@ -47,7 +47,11 @@
               <p><?= substr(strip_tags($featured['description']), 0, 120) ?>...</p>
             </div>
             <div class="featured-post-thumb">
-              <img src="uploads/<?= htmlspecialchars($featured['image']) ?>" alt="<?= htmlspecialchars($featured['name']) ?>" />
+                          <img 
+  src="uploads/posts/<?= htmlspecialchars($featured['image']) ?>" 
+  alt="<?= htmlspecialchars($featured['name']) ?>" 
+  style="width:500px; max-width:100%; border-radius:12px; object-fit:cover;"
+/>
             </div>
           </article>
         <?php
