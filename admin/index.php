@@ -1,6 +1,46 @@
 <?php
 include('authentication.php');
 include('includes/header.php');
+
+// Đếm tổng số Categories
+$query_categories = "SELECT * FROM categories WHERE status != '2'";
+$query_categories_run = mysqli_query($con, $query_categories);
+$total_categories = mysqli_num_rows($query_categories_run);
+
+// Đếm tổng số Posts
+$query_posts = "SELECT * FROM posts WHERE status != '2'";
+$query_posts_run = mysqli_query($con, $query_posts);
+$total_posts = mysqli_num_rows($query_posts_run);
+
+// Đếm tổng số Users
+$query_users = "SELECT * FROM users WHERE role_as = '0' AND status != '2'";
+$query_users_run = mysqli_query($con, $query_users);
+$total_users = mysqli_num_rows($query_users_run);
+
+// Đếm tổng số Admins
+$query_admins = "SELECT * FROM users WHERE role_as IN ('1','2') AND status != '2'";
+$query_admins_run = mysqli_query($con, $query_admins);
+$total_admins = mysqli_num_rows($query_admins_run);
+
+// Thống kê bài viết hàng ngày (7 ngày gần nhất)
+$post_dates = [];
+$post_counts = [];
+$total_posts_week = 0;
+$start_date = date('Y-m-d', strtotime('-6 days'));
+$end_date = date('Y-m-d');
+
+$query_daily_posts = "SELECT DATE(created_at) as post_date, COUNT(id) as post_count 
+                      FROM posts 
+                      WHERE created_at >= '$start_date' AND created_at <= '$end_date 23:59:59'
+                      GROUP BY DATE(created_at)
+                      ORDER BY post_date ASC";
+$query_daily_posts_run = mysqli_query($con, $query_daily_posts);
+
+while($row = mysqli_fetch_assoc($query_daily_posts_run)) {
+    $post_dates[] = date('M d', strtotime($row['post_date']));
+    $post_counts[] = $row['post_count'];
+    $total_posts_week += $row['post_count'];
+}
 ?>
 
 <div class="container">
@@ -10,11 +50,6 @@ include('includes/header.php');
             class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
             <div>
                 <h3 class="fw-bold mb-3">Dashboard</h3>
-                <h6 class="op-7 mb-2">Free Bootstrap 5 Admin Dashboard</h6>
-            </div>
-            <div class="ms-md-auto py-2 py-md-0">
-                <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
-                <a href="#" class="btn btn-primary btn-round">Add Customer</a>
             </div>
         </div>
         <div class="row">
@@ -22,16 +57,16 @@ include('includes/header.php');
                 <div class="card card-stats card-round">
                     <div class="card-body">
                         <div class="row align-items-center">
-                            <div class="col-icon">
+                            <a href="view-categories.php" class="col-icon">
                                 <div
                                     class="icon-big text-center icon-primary bubble-shadow-small">
-                                    <i class="fas fa-users"></i>
+                                    <i class="fas fa-list-alt"></i>
                                 </div>
-                            </div>
+                            </a>
                             <div class="col col-stats ms-3 ms-sm-0">
                                 <div class="numbers">
-                                    <p class="card-category">Visitors</p>
-                                    <h4 class="card-title">1,294</h4>
+                                    <p class="card-category">Total Categories</p>
+                                    <h4 class="card-title"><?= $total_categories; ?></h4>
                                 </div>
                             </div>
                         </div>
@@ -42,16 +77,16 @@ include('includes/header.php');
                 <div class="card card-stats card-round">
                     <div class="card-body">
                         <div class="row align-items-center">
-                            <div class="col-icon">
+                            <a href="view-posts.php" class="col-icon">
                                 <div
                                     class="icon-big text-center icon-info bubble-shadow-small">
-                                    <i class="fas fa-user-check"></i>
+                                    <i class="far fa-newspaper"></i>
                                 </div>
-                            </div>
+                            </a>
                             <div class="col col-stats ms-3 ms-sm-0">
                                 <div class="numbers">
-                                    <p class="card-category">Subscribers</p>
-                                    <h4 class="card-title">1303</h4>
+                                    <p class="card-category">Total Posts</p>
+                                    <h4 class="card-title"><?= $total_posts; ?></h4>
                                 </div>
                             </div>
                         </div>
@@ -62,16 +97,16 @@ include('includes/header.php');
                 <div class="card card-stats card-round">
                     <div class="card-body">
                         <div class="row align-items-center">
-                            <div class="col-icon">
+                            <a href="view-register.php" class="col-icon">
                                 <div
                                     class="icon-big text-center icon-success bubble-shadow-small">
-                                    <i class="fas fa-luggage-cart"></i>
+                                    <i class="fas fa-users"></i>
                                 </div>
-                            </div>
+                            </a>
                             <div class="col col-stats ms-3 ms-sm-0">
                                 <div class="numbers">
-                                    <p class="card-category">Sales</p>
-                                    <h4 class="card-title">$ 1,345</h4>
+                                    <p class="card-category">Total Users</p>
+                                    <h4 class="card-title"><?= $total_users; ?></h4>
                                 </div>
                             </div>
                         </div>
@@ -82,16 +117,16 @@ include('includes/header.php');
                 <div class="card card-stats card-round">
                     <div class="card-body">
                         <div class="row align-items-center">
-                            <div class="col-icon">
+                            <a href="view-register.php" class="col-icon">
                                 <div
                                     class="icon-big text-center icon-secondary bubble-shadow-small">
-                                    <i class="far fa-check-circle"></i>
+                                    <i class="fas fa-user-shield"></i>
                                 </div>
-                            </div>
+                            </a>
                             <div class="col col-stats ms-3 ms-sm-0">
                                 <div class="numbers">
-                                    <p class="card-category">Order</p>
-                                    <h4 class="card-title">576</h4>
+                                    <p class="card-category">Total Admins</p>
+                                    <h4 class="card-title"><?= $total_admins; ?></h4>
                                 </div>
                             </div>
                         </div>
@@ -100,87 +135,26 @@ include('includes/header.php');
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8">
-                <div class="card card-round">
-                    <div class="card-header">
-                        <div class="card-head-row">
-                            <div class="card-title">User Statistics</div>
-                            <div class="card-tools">
-                                <a
-                                    href="#"
-                                    class="btn btn-label-success btn-round btn-sm me-2">
-                                    <span class="btn-label">
-                                        <i class="fa fa-pencil"></i>
-                                    </span>
-                                    Export
-                                </a>
-                                <a href="#" class="btn btn-label-info btn-round btn-sm">
-                                    <span class="btn-label">
-                                        <i class="fa fa-print"></i>
-                                    </span>
-                                    Print
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-container" style="min-height: 375px">
-                            <canvas id="statisticsChart"></canvas>
-                        </div>
-                        <div id="myChartLegend"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <div class="card card-primary card-round">
                     <div class="card-header">
                         <div class="card-head-row">
-                            <div class="card-title">Daily Sales</div>
-                            <div class="card-tools">
-                                <div class="dropdown">
-                                    <button
-                                        class="btn btn-sm btn-label-light dropdown-toggle"
-                                        type="button"
-                                        id="dropdownMenuButton"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false">
-                                        Export
-                                    </button>
-                                    <div
-                                        class="dropdown-menu"
-                                        aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="card-title">Daily Posts</div>
                         </div>
-                        <div class="card-category">March 25 - April 02</div>
+                        <div class="card-category"><?= date('M d', strtotime($start_date)) . ' - ' . date('M d', strtotime($end_date)) ?></div>
                     </div>
                     <div class="card-body pb-0">
                         <div class="mb-4 mt-2">
-                            <h1>$4,578.58</h1>
+                            <h1><?= $total_posts_week ?> Posts</h1>
                         </div>
                         <div class="pull-in">
-                            <canvas id="dailySalesChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="card card-round">
-                    <div class="card-body pb-0">
-                        <div class="h1 fw-bold float-end text-primary">+5%</div>
-                        <h2 class="mb-2">17</h2>
-                        <p class="text-muted">Users online</p>
-                        <div class="pull-in sparkline-fix">
-                            <div id="lineChart"></div>
+                            <canvas id="dailyPostsChart"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-12">
                 <div class="card card-round">
                     <div class="card-header">
@@ -299,7 +273,7 @@ include('includes/header.php');
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="row">
             <div class="col-md-4">
                 <div class="card card-round">
@@ -585,5 +559,57 @@ include('includes/header.php');
 
 <?php
 include('includes/footer.php');
-include('includes/script.php');
 ?>
+<script src="assets/js/core/jquery-3.7.1.min.js"></script>
+<script src="assets/js/core/popper.min.js"></script>
+<script src="assets/js/core/bootstrap.min.js"></script>
+
+<!-- jQuery Scrollbar -->
+<script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+<!-- Chart JS -->
+<script src="assets/js/plugin/chart.js/chart.min.js"></script>
+
+<!-- Kaiadmin JS -->
+<script src="assets/js/kaiadmin.min.js"></script>
+
+<!-- Custom JS for Chart -->
+<script>
+$(document).ready(function() {
+    var dailyPostsChart = document.getElementById('dailyPostsChart').getContext('2d');
+
+    var myDailyPostsChart = new Chart(dailyPostsChart, {
+        type: 'line',
+        data: {
+            labels: <?= json_encode($post_dates); ?>,
+            datasets:[ {
+                label: "Daily Posts", 
+                fill: true, 
+                backgroundColor: "rgba(255,255,255,0.2)", 
+                borderColor: "#fff", 
+                borderCapStyle: "butt", 
+                borderDash: [], 
+                borderDashOffset: 0, 
+                pointBorderColor: "#fff", 
+                pointBackgroundColor: "#fff", 
+                pointBorderWidth: 1, 
+                pointHoverRadius: 5, 
+                pointHoverBackgroundColor: "#fff", 
+                pointHoverBorderColor: "#fff", 
+                pointHoverBorderWidth: 1, 
+                pointRadius: 1, 
+                pointHitRadius: 5, 
+                data: <?= json_encode($post_counts); ?>
+            }]
+        },
+        options : {
+            maintainAspectRatio: false, 
+            legend: { display: false }, 
+            animation: { easing: "easeInOutBack" }, 
+            scales: { yAxes:[{ display:false }], xAxes:[{ display:false }] }
+        }
+    });
+});
+</script>
+</body>
+</html>

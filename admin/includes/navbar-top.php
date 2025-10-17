@@ -1,3 +1,17 @@
+<?php
+$user_data = [];
+if (isset($_SESSION['auth_user']['user_id'])) {
+    $user_id = $_SESSION['auth_user']['user_id'];
+
+    $query = "SELECT fname, lname, email, image FROM users WHERE id = '$user_id' LIMIT 1";
+    $result = mysqli_query($con, $query);
+
+    if (mysqli_num_rows($result) > 0) {
+        $user_data = mysqli_fetch_assoc($result);
+    }
+}
+?>
+
 <div class="main-header">
     <div class="main-header-logo">
         <!-- Logo Header -->
@@ -303,14 +317,17 @@
                         href="#"
                         aria-expanded="false">
                         <div class="avatar-sm">
-                            <img
-                                src="assets/img/profile.jpg"
-                                alt="..."
-                                class="avatar-img rounded-circle" />
+                            <?php
+                                $image_path = "assets/img/profile.jpg"; 
+                                if (!empty($user_data['image'])) {
+                                    $image_path = "../uploads/users/" . htmlspecialchars($user_data['image']);
+                                }
+                                ?>
+                                <img src="<?= $image_path; ?>" alt="Avatar" class="avatar-img rounded-circle" />
                         </div>
                         <span class="profile-username">
                             <span class="op-7">Hi,</span>
-                            <span class="fw-bold">Hizrian</span>
+                            <span class="fw-bold"><?= htmlspecialchars($user_data['fname'] ?? 'User'); ?></span>
                         </span>
                     </a>
                     <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -318,28 +335,18 @@
                             <li>
                                 <div class="user-box">
                                     <div class="avatar-lg">
-                                        <img
-                                            src="assets/img/profile.jpg"
-                                            alt="image profile"
-                                            class="avatar-img rounded" />
+                                        <img src="<?= $image_path; ?>" alt="image profile" class="avatar-img rounded" />
                                     </div>
                                     <div class="u-text">
-                                        <h4>Hizrian</h4>
-                                        <p class="text-muted">hello@example.com</p>
+                                        <h4><?= htmlspecialchars(($user_data['fname'] ?? '') . ' ' . ($user_data['lname'] ?? '')); ?></h4>
+                                        <p class="text-muted"><?= htmlspecialchars($user_data['email'] ?? 'email@example.com'); ?></p>
                                         <a
-                                            href="profile.html"
+                                            href="./profile.php"
                                             class="btn btn-xs btn-secondary btn-sm">View Profile</a>
                                     </div>
                                 </div>
                             </li>
                             <li>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">My Profile</a>
-                                <a class="dropdown-item" href="#">My Balance</a>
-                                <a class="dropdown-item" href="#">Inbox</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Account Setting</a>
-                                <div class="dropdown-divider"></div>
                                 <form action="../logout.php" method="post">
                                     <button class="dropdown-item" type="submit">Logout</button>
                                 </form>

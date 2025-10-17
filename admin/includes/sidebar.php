@@ -58,9 +58,9 @@
                         <p>Posts</p>
                     </a>
                 </li>
-                <li class="nav-item <?= $page == '#' ? 'active' : ''; ?>">
-                    <a href="#">
-                        <i class="fas fa-pen-square"></i>
+                <li class="nav-item <?= $page == 'profile.php' ? 'active' : ''; ?>">
+                    <a href="profile.php">
+                        <i class="fas fa-user"></i>
                         <p>Profile</p>
                     </a>
                 </li>
