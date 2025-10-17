@@ -11,6 +11,14 @@
       <span class="icon-bar"></span>
     </button>
     <div class="collapse navbar-collapse nav-list" id="mainNav">
+    <!-- Search -->
+        <form class="form-inline my-2 my-lg-0 ml-3" method="GET" action="search.php">
+  <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search..." aria-label="Search" required>
+  <button class=" btn-outline-success my-2 my-sm-0" type="submit">
+    <i class="fa fa-search"></i>
+  </button>
+</form>
+
       <!-- Navigation Links -->
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
