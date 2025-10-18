@@ -35,9 +35,10 @@
                   </span>
                 </p>
               </div>
-              <a href="post.php?title=<?= urlencode($featured['slug']) ?>" class="featured-post-title">
-                <?= htmlspecialchars($featured['name']) ?>
-              </a>
+              <a href="single-blog.php?slug=<?= urlencode($featured['slug']) ?>" class="featured-post-title">
+  <?= htmlspecialchars($featured['name']) ?>
+</a>
+
               <ul class="featured-post-meta">
                 <li>
                   <i class="fa fa-clock-o"></i>
