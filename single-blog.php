@@ -25,7 +25,7 @@
       </div>
       <div class="col-lg-7 order-1 order-lg-1">
         <article class="single-blog">
-          <a href="#" class="tag">Travel</a>
+          <!-- <a href="#" class="tag">Travel</a> -->
           <p class="title"><?= $post_result['name'] ?></p>
           <ul class="meta">
             <li>By <a href="about.html"><?= $post_result['lname'] . ' ' . $post_result['fname'] ?></a></li>
@@ -36,6 +36,14 @@
                   echo date('F j, Y, H:i', $created_at);
               ?>
             </li>
+            <li class="flex-fill d-flex justify-content-end align-items-top">
+                <a class=" text-primary">
+                  <p class="d-inline ml-2">12</p> <i class=" bi bi-hand-thumbs-up-fill"></i>
+                </a>
+                <a class=" text-danger">
+                  <p class="d-inline ml-2">12</p> <i class="bi bi-hand-thumbs-down-fill"></i>
+                </a>
+              </li>
           </ul>
           <img src="uploads/posts/<?= $post_result['image'] ?>" width="100%" alt="banner">
           

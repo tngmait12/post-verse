@@ -8,12 +8,13 @@ $meta_keyword = "PHP, Blog, Website, HTML, CSS, JS, BOOTSTRAP";
 
 include('includes/header.php'); 
 
-if(isset($_SESSION['auth']))
+if (isset($_SESSION['auth']))
 {
     $_SESSION['message'] = "You are already logged in";
-    header('Location: index.php');
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
     exit(0);
 }
+$_SESSION['login-referer'] = $_SERVER['HTTP_REFERER'];
 ?>
 
 <section class="py-5">

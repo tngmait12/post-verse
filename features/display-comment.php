@@ -24,22 +24,32 @@
                 <div class="name-field">
                     <?= $cmt['fname'] . " " . $cmt['lname'] ?>
                 </div>
-                <div class="content-field">
-                    <?= $cmt['content'] ?>
+                <div class="content-field"><?= $cmt['content'] ?>
                 </div>
-                <div style="color: #1877F2;">
-                    <i class="fa fa-clock-o pl-2"></i>
-                    <?php 
-                        $created_at = strtotime($cmt['created_at']); 
-                        echo date('F j, Y, H:i', $created_at);
-                    ?>
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="" style="color: #1877F2; font-size: smaller;">
+                        <i class="fa fa-clock-o"></i>
+                        <?php 
+                            $created_at = strtotime($cmt['created_at']); 
+                            echo date('F j, Y, H:i', $created_at);
+                        ?>
+                    </div>
+                    <div>
+                        <a onclick="replyCmt(<?= $cmt['id']?>, '<?= $cmt['fname'] . ' ' . $cmt['lname'] ?>')" role="button" class="" style="cursor: pointer;">reply</a>
+                        <a class=" text-primary">
+                            <p class="d-inline ml-2">12</p> <i class=" bi bi-hand-thumbs-up-fill"></i>
+                        </a>
+                        <a class=" text-danger">
+                            <p class="d-inline ml-2">12</p> <i class="bi bi-hand-thumbs-down-fill"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <?php if ($cmt['sub_cmt'] > 0): ?>
-                <div id="replies-<?= $cmt['id'] ?>" class="reply-section ml-3">
+            <div id="replies-<?= $cmt['id'] ?>" class="reply-section ml-3">
+                <?php if ($cmt['sub_cmt'] > 0): ?>
                     <a id="expand-<?= $cmt['id'] ?>" onclick="expand_reply(<?= $cmt['id'] ?>)">Mở rộng - <?= $cmt['sub_cmt'] ?> bình luận</a>
-                </div>
-            <?php endif; ?>
+                <?php endif; ?>
+            </div>
         </div>
     <?php endif; ?>
 <?php endwhile; ?>

@@ -12,15 +12,15 @@
 
 <div id="comment-title" class="text-center border-bottom order-first">
     <h3 class="d-inline">Comment</h3>
-    <p class="d-inline"> - <?= $num_cmt ?> comments</p>
 </div>
 
 <div id="display-comments" class="flex-fill p-2 order-sm-last"></div>
 
 <div id="write-comment" class="order-first order-lg-last" class="border-top">
     <form id="post-cmt" class="d-flex p-3">
-        <input type="text" class="flex-fill" name="cmt" style="border: none; border-bottom: 2px black solid; outline: none;"/>
-        <input type="hidden" name="post_id" value="<?= $post_result['id'] ?>">
+        <textarea id="input-cmt" type="text" class="flex-fill" rows="1" name="cmt" placeholder="viết bình luận..." style="border: none; border-bottom: 2px black solid; outline: none; resize: none;"></textarea>
+        <input id="post-id" type="hidden" name="post_id" value="<?= $post_result['id'] ?>">
+        <input id="reply" type="hidden" name="reply" value="">
         <button type="submit" name="submit" class="ml-3"
             style="
                 background-color: #1877F2; 
@@ -33,16 +33,24 @@
                 justify-content: center; 
                 align-items: center;"
         >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="30px" height="30px">
-                <path d="M115.9 448.9C83.3 408.6 64 358.4 64 304C64 171.5 178.6 64 320 64C461.4 64 576 171.5 576 304C576 436.5 461.4 544 320 544C283.5 544 248.8 536.8 217.4 524L101 573.9C97.3 575.5 93.5 576 89.5 576C75.4 576 64 564.6 64 550.5C64 546.2 65.1 542 67.1 538.3L115.9 448.9zM153.2 418.7C165.4 433.8 167.3 454.8 158 471.9L140 505L198.5 479.9C210.3 474.8 223.7 474.7 235.6 479.6C261.3 490.1 289.8 496 319.9 496C437.7 496 527.9 407.2 527.9 304C527.9 200.8 437.8 112 320 112C202.2 112 112 200.8 112 304C112 346.8 127.1 386.4 153.2 418.7z" fill="white"/>
-            </svg>
+            <i class="bi bi-chat-fill"></i>
         </button>
     </form>
 </div>
 
 <script>
+    form = document.getElementById('post-cmt')
+    input_cmt = form.querySelector('#input-cmt')
+    input_reply =form.querySelector('#reply')
+    d_comment = document.getElementById('display-comments')
+
+    function reset_form() {
+        input_reply.value = ''
+        input_cmt.value = ''
+        input_cmt.placeholder = 'viết bình luận...'
+    }
+    
     function load_comment(id) {
-        d_comment = document.getElementById('display-comments')
 
         const xhr = new XMLHttpRequest()
         xhr.open('GET', 'features/display-comment.php?id=' + id, true)
@@ -69,6 +77,14 @@
             .catch(error => { 
                 console.error('error: ' + error) 
             })
+            reset_form()
+        }
+    })
+
+    document.addEventListener('click', function (e) {
+        const clickInsideForm = form.contains(e.target) || d_comment.contains(e.target)
+        if (!clickInsideForm) {
+            reset_form()
         }
     })
     
@@ -93,11 +109,18 @@
         
         replies_section.innerHTML = txt
     }
+
+    function replyCmt(reply_id, name) {
+        input_cmt.placeholder = 'Trả lời bình luận của ' + name  + '...'
+        input_cmt.focus()
+        input_reply.value = reply_id
+        console.log(input_reply.value)
+    }
 </script>
 
 <style>
     div#display-comments {
-        height: 75vh;
+        height: 80vh;
         overflow-y: auto;
     }
 
@@ -112,6 +135,13 @@
     div.name-field {
         border-bottom: 1px black solid;
         font-weight: bolder;
+    }
+
+    div.content-field {
+        margin: 0;
+        padding: 0;
+        white-space: pre-line;
+        line-height: 1.5;
     }
 
     div.reply-section > a {
