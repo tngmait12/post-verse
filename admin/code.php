@@ -286,4 +286,66 @@ if(isset($_POST['delete_post'])){
         exit(0);
     }
 }
+
+// Profile
+if(isset($_POST['update_profile']))
+{
+    $user_id = mysqli_real_escape_string($con, $_POST['user_id']);
+    $fname = mysqli_real_escape_string($con, $_POST['fname']);
+    $lname = mysqli_real_escape_string($con, $_POST['lname']);
+    $email = mysqli_real_escape_string($con, $_POST['email']);
+    $phone = mysqli_real_escape_string($con, $_POST['phone']);
+    $social = mysqli_real_escape_string($con, $_POST['social']);
+    $gender = mysqli_real_escape_string($con, $_POST['gender']);
+    
+    $old_image = mysqli_real_escape_string($con, $_POST['old_image']);
+    $new_image = $_FILES['image']['name'];
+    
+    $update_filename = "";
+    if($new_image != NULL)
+    {
+        // Upload ảnh mới
+        $image_extension = pathinfo($new_image, PATHINFO_EXTENSION);
+        $filename = time().'.'.$image_extension;
+        $update_filename = $filename;
+
+        // Xóa ảnh cũ nếu có
+        if($old_image != NULL && file_exists('../uploads/users/'.$old_image)){
+            unlink('../uploads/users/'.$old_image);
+        }
+        // Di chuyển file ảnh mới vào thư mục
+        move_uploaded_file($_FILES['image']['tmp_name'], '../uploads/users/'.$filename);
+    }
+    else
+    {
+        // Giữ lại ảnh cũ nếu không upload ảnh mới
+        $update_filename = $old_image;
+    }
+
+    // Câu lệnh UPDATE
+    $query = "UPDATE users SET 
+                fname='$fname', 
+                lname='$lname', 
+                email='$email', 
+                phone='$phone', 
+                social='$social', 
+                gender='$gender', 
+                image='$update_filename' 
+              WHERE id='$user_id'";
+              
+    $query_run = mysqli_query($con, $query);
+
+    if($query_run)
+    {
+        $_SESSION['message'] = "Profile Updated Successfully";
+        header("Location: profile.php"); // Quay lại trang profile
+        exit(0);
+    }
+    else
+    {
+        $_SESSION['message'] = "Something Went Wrong!";
+        header("Location: profile.php");
+        exit(0);
+    }
+}
 ?>
