@@ -42,13 +42,10 @@ if(isset($_POST['login_btn'])) {
             }
             else {
                 $_SESSION['message'] = "Login successful. Welcome ".$user['fname']."!";
-                header("Location: index.php");
+                header("Location: " . $_SESSION['login-referer']);
+                unset($_SESSION['login-referer']);
                 exit(0);
             }
-
-            $_SESSION['message'] = "Login successful. Welcome ".$user['fname']."!";
-            header("Location: index.php");
-            exit(0);
         } else {
             // Invalid password
             $_SESSION['message'] = "Invalid Email or Password.";
