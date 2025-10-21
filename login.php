@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 include('includes/config.php');
 
 $page_title = "Login Page";

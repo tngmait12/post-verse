@@ -1,4 +1,6 @@
 <?php
+    $source_reaction = 'comment_reactions';
+
     include("../admin/config/dbcon.php");
 
     if (isset($_GET['id'])) {
@@ -19,6 +21,7 @@
 
 <?php while ($cmt = mysqli_fetch_assoc($result)): ?>
     <?php if ($cmt['parent_id'] == null): ?>
+        <?php $reaction_id = $cmt['id']; ?>
         <div class="comment-field mt-3">
             <div class="comment-box">
                 <div class="name-field">
@@ -36,12 +39,7 @@
                     </div>
                     <div>
                         <a onclick="replyCmt(<?= $cmt['id']?>, '<?= $cmt['fname'] . ' ' . $cmt['lname'] ?>')" role="button" class="" style="cursor: pointer;">reply</a>
-                        <a class=" text-primary">
-                            <p class="d-inline ml-2">12</p> <i class=" bi bi-hand-thumbs-up-fill"></i>
-                        </a>
-                        <a class=" text-danger">
-                            <p class="d-inline ml-2">12</p> <i class="bi bi-hand-thumbs-down-fill"></i>
-                        </a>
+                        <?php include('reaction.php'); ?>
                     </div>
                 </div>
             </div>
