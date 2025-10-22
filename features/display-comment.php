@@ -21,7 +21,7 @@
 
 <?php while ($cmt = mysqli_fetch_assoc($result)): ?>
     <?php if ($cmt['parent_id'] == null): ?>
-        <?php $reaction_id = $cmt['id']; ?>
+        <?php $source_id = $cmt['id']; ?>
         <div class="comment-field mt-3">
             <div class="comment-box">
                 <div class="name-field">
@@ -37,9 +37,11 @@
                             echo date('F j, Y, H:i', $created_at);
                         ?>
                     </div>
-                    <div>
+                    <div class="d-flex">
                         <a onclick="replyCmt(<?= $cmt['id']?>, '<?= $cmt['fname'] . ' ' . $cmt['lname'] ?>')" role="button" class="" style="cursor: pointer;">reply</a>
-                        <?php include('reaction.php'); ?>
+                        <div class="reaction-<?= $source_id ?>" data-source="<?= $source_reaction ?>">
+                            <?php include('reaction.php'); ?>
+                        </div>
                     </div>
                 </div>
             </div>

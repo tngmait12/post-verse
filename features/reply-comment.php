@@ -23,7 +23,7 @@
 ?>
 <div class="reply-box pl-3">
     <?php while ($reply = $result->fetch_assoc()): ?>
-        <?php $reaction_id = $reply['id']; ?>
+        <?php $source_id = $reply['id']; ?>
         <div class="comment-box mt-3">
             <div class="name-field">
                 <?= $reply['fname'] . ' ' . $reply['lname'] ?>
@@ -33,18 +33,20 @@
             <div class="content-field"><?= $reply['content'] ?>
             </div>
             <div class="d-flex align-items-center justify-content-between">
-                    <div class="" style="color: #1877F2; font-size: smaller;">
-                        <i class="fa fa-clock-o"></i>
-                        <?php 
-                            $created_at = strtotime($reply['created_at']); 
-                            echo date('F j, Y, H:i', $created_at);
-                        ?>
-                    </div>
-                    <div class="">
-                        <a onclick="replyCmt(<?= $reply['id']?>, '<?= $reply['fname'] . ' ' . $reply['lname'] ?>')" role="button" class="" style="cursor: pointer;">reply</a>
+                <div class="" style="color: #1877F2; font-size: smaller;">
+                    <i class="fa fa-clock-o"></i>
+                    <?php 
+                        $created_at = strtotime($reply['created_at']); 
+                        echo date('F j, Y, H:i', $created_at);
+                    ?>
+                </div>
+                <div class="d-flex">
+                    <a onclick="replyCmt(<?= $reply['id']?>, '<?= $reply['fname'] . ' ' . $reply['lname'] ?>')" role="button" class="" style="cursor: pointer;">reply</a>
+                    <div class="reaction-<?= $source_id ?>" data-source="<?= $source_reaction ?>">
                         <?php include('reaction.php'); ?>
                     </div>
                 </div>
+            </div>
         </div>
     <?php endwhile; ?>
 </div>
