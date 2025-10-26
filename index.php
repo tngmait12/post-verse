@@ -20,7 +20,7 @@ include('includes/header.php');
           <h2>Articles</h2>
           <p>View the latest news on Blogger</p>
         </div>
-        <?php include('includes/blog-post.php') ?>
+        <?php include('section/blog-post.php') ?>
       </div>
       <div class="col-lg-4">
         <div class="blog-post-widget">

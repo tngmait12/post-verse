@@ -1,5 +1,6 @@
 <?php 
   $slug = $_GET["slug"] ?? '';
+  $source_reaction = 'post_reactions';
 
   include('includes/config.php');
 
@@ -8,6 +9,8 @@
   mysqli_stmt_execute($stmt);
   $result = mysqli_stmt_get_result($stmt);
   $post_result = mysqli_fetch_assoc($result);
+
+  $source_id = $post_result['id'];
 
   include('includes/header.php');
   
@@ -37,13 +40,10 @@
               ?>
             </li>
             <li class="flex-fill d-flex justify-content-end align-items-top">
-                <a class=" text-primary">
-                  <p class="d-inline ml-2">12</p> <i class=" bi bi-hand-thumbs-up-fill"></i>
-                </a>
-                <a class=" text-danger">
-                  <p class="d-inline ml-2">12</p> <i class="bi bi-hand-thumbs-down-fill"></i>
-                </a>
-              </li>
+              <div class="reaction-<?= $source_id ?>" data-source="<?= $source_reaction ?>">
+                <?php include("features/reaction.php"); ?>
+              </div>
+            </li>
           </ul>
           <img src="uploads/posts/<?= $post_result['image'] ?>" width="100%" alt="banner">
           
@@ -54,5 +54,54 @@
     </div>
   </div>
 </section>
+
+<style>
+  input[type="radio"] {
+    display: none;
+  }
+  div.btn_reac {
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  document.addEventListener('click', function (e) {
+    var reac_status = null // status of reaction(like or dislike)
+    var source_reac = null // name table(post_reactions or comment_reactions)
+    var source_id = null // id of post or comment
+
+    btn = e.target.closest('.btn_reac')
+    if (!btn) return;
+    source_id = btn.getAttribute('data-id')
+
+    parent_div = document.querySelector('.reaction-' + source_id)
+    if (!parent_div) return;
+    source_reac = parent_div.getAttribute('data-source')
+
+    reac_status = btn.getAttribute('data-status')
+    console.log(source_id, reac_status, source_reac)
+    
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'features/reaction-handle.php', true)
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    xhr.send('source_id=' + source_id + '&reaction_status=' + reac_status + '&source=' + source_reac)
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        var get_status = JSON.parse(xhr.responseText)
+        
+        if (!get_status || get_status.status === 'error') return;
+
+        const xhr2 = new XMLHttpRequest()
+        xhr2.open('GET', 'features/reaction.php?source=' + source_reac + '&source_id=' + source_id, true)
+        xhr2.send()
+        xhr2.onload = function () {
+          if (xhr2.status === 200) {
+            parent_div.innerHTML = xhr2.responseText
+          }
+        }
+      }
+    }
+  })
+</script>
 
 <?php include('includes/footer.php') ?>

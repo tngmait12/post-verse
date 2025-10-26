@@ -1,5 +1,4 @@
 <?php
-
 include('includes/config.php');
 
 $page_title = "Login Page";

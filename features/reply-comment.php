@@ -1,4 +1,6 @@
 <?php
+    $source_reaction = 'comment_reactions';
+
     include('../admin/config/dbcon.php');
 
     $query = "SELECT c.*, u.lname, u.fname, r.lname AS r_lname, r.fname AS r_fname
@@ -21,6 +23,7 @@
 ?>
 <div class="reply-box pl-3">
     <?php while ($reply = $result->fetch_assoc()): ?>
+        <?php $source_id = $reply['id']; ?>
         <div class="comment-box mt-3">
             <div class="name-field">
                 <?= $reply['fname'] . ' ' . $reply['lname'] ?>
@@ -30,23 +33,20 @@
             <div class="content-field"><?= $reply['content'] ?>
             </div>
             <div class="d-flex align-items-center justify-content-between">
-                    <div class="" style="color: #1877F2; font-size: smaller;">
-                        <i class="fa fa-clock-o"></i>
-                        <?php 
-                            $created_at = strtotime($reply['created_at']); 
-                            echo date('F j, Y, H:i', $created_at);
-                        ?>
-                    </div>
-                    <div class="">
-                        <a onclick="replyCmt(<?= $reply['id']?>, '<?= $reply['fname'] . ' ' . $reply['lname'] ?>')" role="button" class="" style="cursor: pointer;">reply</a>
-                        <a class=" text-primary">
-                            <p class="d-inline ml-2">12</p> <i class=" bi bi-hand-thumbs-up-fill"></i>
-                        </a>
-                        <a class=" text-danger">
-                            <p class="d-inline ml-2">12</p> <i class="bi bi-hand-thumbs-down-fill"></i>
-                        </a>
+                <div class="" style="color: #1877F2; font-size: smaller;">
+                    <i class="fa fa-clock-o"></i>
+                    <?php 
+                        $created_at = strtotime($reply['created_at']); 
+                        echo date('F j, Y, H:i', $created_at);
+                    ?>
+                </div>
+                <div class="d-flex">
+                    <a onclick="replyCmt(<?= $reply['id']?>, '<?= $reply['fname'] . ' ' . $reply['lname'] ?>')" role="button" class="" style="cursor: pointer;">reply</a>
+                    <div class="reaction-<?= $source_id ?>" data-source="<?= $source_reaction ?>">
+                        <?php include('reaction.php'); ?>
                     </div>
                 </div>
+            </div>
         </div>
     <?php endwhile; ?>
 </div>
