@@ -1,6 +1,7 @@
 <?php
 
 include('includes/config.php');
+include('config.php');
 
 $page_title = "Home Page";
 $meta_description = "This is home page of PHP Blog Website";

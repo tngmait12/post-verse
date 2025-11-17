@@ -1,4 +1,4 @@
 RewriteEngine On
 
     # Redirect to custom 404 page
-    ErrorDocument 404 http://localhost/PostVerse/404.php
+    ErrorDocument 404 http://localhost/Post-Verse/404.php
