@@ -1,13 +1,12 @@
 <?php
+  include('includes/config.php');
 
-include('includes/config.php');
-
-$page_title = "Home Page";
-$meta_description = "This is home page of PHP Blog Website";
-$meta_keyword = "PHP, Blog, Website, HTML, CSS, JS, BOOTSTRAP";
+  $page_title = "Home Page";
+  $meta_description = "This is home page of PHP Blog Website";
+  $meta_keyword = "PHP, Blog, Website, HTML, CSS, JS, BOOTSTRAP";
 
 
-include('includes/header.php');
+  include('includes/header.php');
 ?>
 
 <?php include('includes/section-featured.php'); ?>

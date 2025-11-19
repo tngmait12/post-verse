@@ -1,25 +1,18 @@
 <?php
+    define('LIMIT_TRENDING', 5);
+
     $query = "SELECT 
-        p.id, 
-        p.meta_description,
+        p.id,
+        p.name,
         p.image,
         p.slug,
         p.created_at,
-        COUNT(CASE WHEN pr.reaction = 'like' THEN 1 END) AS like_count,
-        COUNT(CASE WHEN pr.reaction = 'dislike' THEN 1 END) AS dislike_count
+        COUNT(pr.reaction) AS reaction_count
     FROM posts p
-    LEFT JOIN post_reactions pr ON p.id = pr.source_id
+    LEFT JOIN post_reactions pr ON pr.source_id = p.id
     GROUP BY p.id, p.meta_description, p.image, p.slug, p.created_at
-    ORDER BY 
-        CASE 
-            WHEN COUNT(CASE WHEN pr.reaction = 'dislike' THEN 1 END) = 0 THEN 1
-            ELSE 0
-        END,
-        ROUND(
-            COUNT(CASE WHEN pr.reaction = 'like' THEN 1 END) * 1.0 / 
-            NULLIF(COUNT(CASE WHEN pr.reaction = 'dislike' THEN 1 END), 0), 2
-        ) DESC
-    LIMIT 4;";
+    ORDER BY reaction_count DESC
+    LIMIT " . LIMIT_TRENDING;
 
     $result = mysqli_fetch_all(mysqli_execute_query($con, $query), MYSQLI_ASSOC);
 ?>
@@ -40,7 +33,7 @@
             </div>
             <div class="latest-widget-content">
                 <div class="content-title">
-                    <a href="single-blog.php?slug=<?= $row['slug'] ?>"><?= $row['meta_description'] ?></a>
+                    <a href="single-blog.php?slug=<?= $row['slug'] ?>"><?= $row['name'] ?></a>
                 </div>
                 <div class="content-meta">
                     <ul>
