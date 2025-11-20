@@ -1,8 +1,8 @@
-<?php 
-  $slug = $_GET["slug"] ?? '';
-  $source_reaction = 'post_reactions';
+<?php
+$slug = $_GET["slug"] ?? '';
+$source_reaction = 'post_reactions';
 
-  include('includes/config.php');
+include('includes/config.php');
 
   $query = "SELECT p.*, u.fname, u.lname, c.name AS category_name 
     FROM posts AS p 
@@ -16,11 +16,27 @@
   $result = mysqli_stmt_get_result($stmt);
   $post_result = mysqli_fetch_assoc($result);
 
-  $source_id = $post_result['id'];
+$source_id = $post_result['id'];
 
-  include('includes/header.php');
-  
-  header("single-blog.php?slug=" . urldecode($slug));
+// Kiểm tra xem người dùng đã đăng nhập và đã lưu bài viết này chưa
+$is_bookmarked = false;
+$user_id = null;
+
+if (isset($_SESSION['auth']) && isset($_SESSION['auth_user'])) {
+  $user_id = $_SESSION['auth_user']['user_id'];
+
+  // Truy vấn kiểm tra trong bảng user_bookmarks
+  $check_bookmark_query = "SELECT * FROM user_bookmarks WHERE user_id='$user_id' AND post_id='$source_id' LIMIT 1";
+  $check_run = mysqli_query($con, $check_bookmark_query);
+
+  if (mysqli_num_rows($check_run) > 0) {
+    $is_bookmarked = true;
+  }
+}
+
+include('includes/header.php');
+
+header("single-blog.php?slug=" . urldecode($slug));
 ?>
 
 <section class="blog-single">
@@ -49,6 +65,33 @@
                   echo date('F j, Y, H:i', $created_at);
               ?>
             </li>
+            
+            <!-- Bookmark -->
+              <li class="d-flex align-items-center ml-3">
+                <?php if (isset($_SESSION['auth'])) : ?>
+                  <form action="bookmark_code.php" method="POST" class="m-0 p-0 d-inline">
+                    <input type="hidden" name="post_id" value="<?= $source_id; ?>">
+
+                    <button type="submit" name="bookmark_btn"
+                      class="btn btn-sm p-0 m-0 <?= $is_bookmarked ? 'btn-warning' : 'btn-outline-warning'; ?>"
+                      style="min-width: 40px !important;"
+                      data-toggle="tooltip" data-placement="top"
+                      title="<?= $is_bookmarked ? 'Bỏ Lưu Bài viết' : 'Lưu Bài viết'; ?>">
+
+                      <i class="fa <?= $is_bookmarked ? 'fa-bookmark' : 'fa-bookmark-o'; ?>"></i>
+                    </button>
+                  </form>
+                <?php else : ?>
+                  <button type="button" class="btn btn-sm p-0 m-0 btn-outline-secondary" disabled
+                      style="min-width: 40px !important;"
+                    data-toggle="tooltip" data-placement="top" title="Đăng nhập để lưu">
+                    
+                    <i class="fa fa-bookmark-o"></i>
+                  </button>
+                <?php endif; ?>
+              </li>
+              <!-- Bookmark -->
+            
             <li class="flex-fill d-flex justify-content-end align-items-top">
               <div class="reaction-<?= $source_id ?>" data-source="<?= $source_reaction ?>">
                 <?php include("features/reaction.php"); ?>
@@ -59,59 +102,64 @@
           
           <div style="display: block;"><?= $post_result['description'] ?></div>
         </article>
-        
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<style>
-  input[type="radio"] {
-    display: none;
-  }
-  div.btn_reac {
-    cursor: pointer;
-  }
-</style>
+  <style>
+    input[type="radio"] {
+      display: none;
+    }
 
-<script>
-  document.addEventListener('click', function (e) {
-    var reac_status = null // status of reaction(like or dislike)
-    var source_reac = null // name table(post_reactions or comment_reactions)
-    var source_id = null // id of post or comment
+    div.btn_reac {
+      cursor: pointer;
+    }
+  </style>
 
-    btn = e.target.closest('.btn_reac')
-    if (!btn) return;
-    source_id = btn.getAttribute('data-id')
+  <script>
+    document.addEventListener('click', function(e) {
+      var reac_status = null // status of reaction(like or dislike)
+      var source_reac = null // name table(post_reactions or comment_reactions)
+      var source_id = null // id of post or comment
 
-    parent_div = document.querySelector('.reaction-' + source_id)
-    if (!parent_div) return;
-    source_reac = parent_div.getAttribute('data-source')
+      btn = e.target.closest('.btn_reac')
+      if (!btn) return;
+      source_id = btn.getAttribute('data-id')
 
-    reac_status = btn.getAttribute('data-status')
-    console.log(source_id, reac_status, source_reac)
-    
-    const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'features/reaction-handle.php', true)
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-    xhr.send('source_id=' + source_id + '&reaction_status=' + reac_status + '&source=' + source_reac)
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        var get_status = JSON.parse(xhr.responseText)
-        
-        if (!get_status || get_status.status === 'error') return;
+      parent_div = document.querySelector('.reaction-' + source_id)
+      if (!parent_div) return;
+      source_reac = parent_div.getAttribute('data-source')
 
-        const xhr2 = new XMLHttpRequest()
-        xhr2.open('GET', 'features/reaction.php?source=' + source_reac + '&source_id=' + source_id, true)
-        xhr2.send()
-        xhr2.onload = function () {
-          if (xhr2.status === 200) {
-            parent_div.innerHTML = xhr2.responseText
+      reac_status = btn.getAttribute('data-status')
+      console.log(source_id, reac_status, source_reac)
+
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', 'features/reaction-handle.php', true)
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+      xhr.send('source_id=' + source_id + '&reaction_status=' + reac_status + '&source=' + source_reac)
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          var get_status = JSON.parse(xhr.responseText)
+
+          if (!get_status || get_status.status === 'error') return;
+
+          const xhr2 = new XMLHttpRequest()
+          xhr2.open('GET', 'features/reaction.php?source=' + source_reac + '&source_id=' + source_id, true)
+          xhr2.send()
+          xhr2.onload = function() {
+            if (xhr2.status === 200) {
+              parent_div.innerHTML = xhr2.responseText
+            }
           }
         }
       }
-    }
-  })
-</script>
+    })
+  </script>
+  <script>
+    // Khởi tạo Tooltip Bootstrap
+    $(function() {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
 
-<?php include('includes/footer.php') ?>
+  <?php include('includes/footer.php') ?>

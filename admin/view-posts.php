@@ -17,12 +17,6 @@ include('includes/header.php');
                     <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                    <a href="#">Tables</a>
-                </li>
-                <li class="separator">
-                    <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
                     <a href="view-register.php">Posts</a>
                 </li>
             </ul>
@@ -58,7 +52,22 @@ include('includes/header.php');
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $query = "SELECT * FROM posts wHERE status!='2' ORDER BY id DESC";
+                                    $query = "
+                                        SELECT 
+                                            posts.*, 
+                                            categories.name AS category_name
+                                        FROM 
+                                            posts
+                                        JOIN 
+                                            categories 
+                                        ON 
+                                            posts.category_id = categories.id
+                                        WHERE 
+                                            posts.status != '2'
+                                        ORDER BY 
+                                            posts.id DESC
+                                        ";
+
                                     $query_run = mysqli_query($con, $query);
                                     if (mysqli_num_rows($query_run) > 0) {
                                         foreach ($query_run as $post) {
@@ -69,12 +78,8 @@ include('includes/header.php');
                                                 <td>
                                                     <img src="../uploads/posts/<?= $post['image'] ?>" width="100px" height="70px" alt="<?= $post['name'] ?>">
                                                 </td>
-                                                <td style="overflow: hidden;
-  line-height: 1.4em;
-  max-height: calc(1.4em * 6);
-  white-space: normal;"><?= $post['description'] ?>
-                                                    </td>
-                                                <td><?= $post['category_id'] ?></td>
+                                                <td><?= $post['meta_description'] ?></td>
+                                                <td><?= $post['category_name'] ?></td>
                                                 <td>
                                                     <?= $post['status'] == 0 ? "Visible" : "Hidden" ?>
                                                 </td>
@@ -82,10 +87,10 @@ include('includes/header.php');
                                                 <td>
                                                     <div class="form-button-action">
                                                         <a class="btn btn-link btn-primary btn-lg" href="edit-post.php?id=<?= $post['id']; ?>">
-                                                                <i class="fa fa-edit"></i>
+                                                            <i class="fa fa-edit"></i>
                                                         </a>
                                                         <form action="code.php" method="POST">
-                                                            <button type="submit"  class="btn btn-link btn-danger" name="delete_post" value="<?= $post['id']; ?>" onclick="if(confirm('Are you sure want to delete this post?')){ this.form.submit(); }">
+                                                            <button type="submit" class="btn btn-link btn-danger" name="delete_post" value="<?= $post['id']; ?>" onclick="if(confirm('Are you sure want to delete this post?')){ this.form.submit(); }">
                                                                 <i class="fa fa-times"></i>
                                                             </button>
                                                         </form>

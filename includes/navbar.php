@@ -2,7 +2,7 @@
   <div class="container">
     <!-- Logo -->
     <a class="navbar-brand" href="index.php">
-      <img class="logo-main" src="images/logo.svg" alt="logo" />
+      <h2>POST VERSE</h2>
     </a>
     <!-- Toogle Button -->
     <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#mainNav">
@@ -24,9 +24,18 @@
         </li>
         <!-- Authentication Links -->
         <?php if (isset($_SESSION['auth'])) : ?>
-          <li class="nav-item">
-            <a class="nav-link" href="logout.php">Logout</a>
-          </li>
+          <div class="dropdown show">
+            <li class="nav-item">
+              <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Account
+              </a>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="<?= $base_url ?>/admin/index.php">Admin Page</a>
+                <a class="dropdown-item" href="#">Profile</a>
+                <a class="dropdown-item" href="logout.php">Logout</a>
+              </div>
+            </li>
+          </div>
         <?php else : ?>
           <li class="nav-item">
             <a class="nav-link" href="login.php">Login</a>
