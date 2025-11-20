@@ -4,11 +4,17 @@ $source_reaction = 'post_reactions';
 
 include('includes/config.php');
 
-$stmt = mysqli_prepare($con, 'SELECT p.*, u.fname, u.lname FROM posts AS p JOIN users AS u ON p.user_id = u.id WHERE slug = ?');
-mysqli_stmt_bind_param($stmt, 's', $slug);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$post_result = mysqli_fetch_assoc($result);
+  $query = "SELECT p.*, u.fname, u.lname, c.name AS category_name 
+    FROM posts AS p 
+    JOIN users AS u ON p.user_id = u.id 
+    JOIN categories AS c ON p.category_id = c.id 
+    WHERE p.slug = ?";
+
+  $stmt = mysqli_prepare($con, $query);
+  mysqli_stmt_bind_param($stmt,'s', $slug);
+  mysqli_stmt_execute($stmt);
+  $result = mysqli_stmt_get_result($stmt);
+  $post_result = mysqli_fetch_assoc($result);
 
 $source_id = $post_result['id'];
 
@@ -33,29 +39,34 @@ include('includes/header.php');
 header("single-blog.php?slug=" . urldecode($slug));
 ?>
 
-<body>
-  <section class="blog-single">
-    <div class="container sticky">
-      <div class="row">
-        <div class="col-lg-5 order-2 order-lg-2">
-          <div id="comments-section" class="border p-2 d-flex flex-column" style="border-color: black; border-radius: 20px; border-width: 20px;">
-            <?php include "section/comment.php" ?>
-          </div>
+<section class="blog-single">
+  <div class="container sticky">
+    <div class="row">
+      <div class="col-lg-5 order-2 order-lg-2">
+        <div id="comments-section" class="border p-2 d-flex flex-column" 
+          style="
+            border-color: black; 
+            border-radius: 20px; 
+            border-width: 20px;"
+          >
+          <?php include "section/comment.php" ?>
         </div>
-        <div class="col-lg-7 order-1 order-lg-1">
-          <article class="single-blog">
-            <!-- <a href="#" class="tag">Travel</a> -->
-            <p class="title"><?= $post_result['name'] ?></p>
-            <ul class="meta">
-              <li>By <a href="about.html"><?= $post_result['lname'] . ' ' . $post_result['fname'] ?></a></li>
-              <li>
-                <i class="fa fa-clock-o"></i>
-                <?php
-                $created_at = strtotime($post_result['created_at']);
-                echo date('F j, Y, H:i', $created_at);
-                ?>
-              </li>
-              <!-- Bookmark -->
+      </div>
+      <div class="col-lg-7 order-1 order-lg-1">
+        <article class="single-blog">
+          <a href="#" class="tag"><?= $post_result['category_name'] ?></a>
+          <p class="title"><?= $post_result['name'] ?></p>
+          <ul class="meta">
+            <li>By <a href="about.html"><?= $post_result['fname'] . ' ' . $post_result['lname'] ?></a></li>
+            <li>
+              <i class="fa fa-clock-o"></i>
+              <?php 
+                  $created_at = strtotime($post_result['created_at']); 
+                  echo date('F j, Y, H:i', $created_at);
+              ?>
+            </li>
+            
+            <!-- Bookmark -->
               <li class="d-flex align-items-center ml-3">
                 <?php if (isset($_SESSION['auth'])) : ?>
                   <form action="bookmark_code.php" method="POST" class="m-0 p-0 d-inline">
@@ -80,18 +91,17 @@ header("single-blog.php?slug=" . urldecode($slug));
                 <?php endif; ?>
               </li>
               <!-- Bookmark -->
-              <li class="flex-fill d-flex justify-content-end align-items-top">
-                <div class="reaction-<?= $source_id ?>" data-source="<?= $source_reaction ?>">
-                  <?php include("features/reaction.php"); ?>
-                </div>
-              </li>
-            </ul>
-            <img src="uploads/posts/<?= $post_result['image'] ?>" width="100%" alt="banner">
-
-            <div style="display: block;"><?= $post_result['description'] ?></div>
-          </article>
-
-        </div>
+            
+            <li class="flex-fill d-flex justify-content-end align-items-top">
+              <div class="reaction-<?= $source_id ?>" data-source="<?= $source_reaction ?>">
+                <?php include("features/reaction.php"); ?>
+              </div>
+            </li>
+          </ul>
+          <img src="uploads/posts/<?= $post_result['image'] ?>" width="100%" alt="banner">
+          
+          <div style="display: block;"><?= $post_result['description'] ?></div>
+        </article>
       </div>
     </div>
   </section>
