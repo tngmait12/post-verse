@@ -4,6 +4,12 @@
 include('includes/config.php');
 
 // 1. KIỂM TRA ĐĂNG NHẬP
+if (!isset($_SESSION['auth_user']['user_id'])) {
+    $_SESSION['message'] = "Bạn cần đăng nhập để truy cập trang cá nhân.";
+    // Chuyển hướng về trang đăng nhập hoặc trang chủ
+    header("Location: login.php"); 
+    exit();
+}
 
 
 $user_id = $_SESSION['auth_user']['user_id'];
@@ -130,3 +136,4 @@ include('includes/header.php');
 include('includes/footer.php'); 
 
 ?>
+
