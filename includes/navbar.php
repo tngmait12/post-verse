@@ -52,7 +52,7 @@
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <a class="dropdown-item" href="<?= $base_url ?>/admin/index.php">Admin Page</a>
-                <a class="dropdown-item" href="profile-user">Profile</a>
+                <a class="dropdown-item" href="profile-user.php">Profile</a>
                 <a class="dropdown-item" href="logout.php">Logout</a>
               </div>
             </li>
