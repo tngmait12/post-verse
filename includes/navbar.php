@@ -11,6 +11,27 @@
       <span class="icon-bar"></span>
     </button>
     <div class="collapse navbar-collapse nav-list" id="mainNav">
+
+
+    <!-- Search -->
+    <form class="d-flex align-items-center ml-3" method="GET" action="search_advanced.php" style="gap: 8px;">
+    
+    <input class="form-control"
+           type="search"
+           name="q"
+           placeholder="Search..."
+           aria-label="Search"
+           required
+           style="height: 35px; width: 150px;">
+    
+    <button class=" d-flex align-items-center justify-content-center"
+        type="submit"
+        style="height: 35px; width: 45px; padding: 0;">
+    <i class="fa fa-search"></i>
+</button>
+
+</form>
+      
       <!-- Navigation Links -->
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
