@@ -4,12 +4,7 @@
 include('includes/config.php');
 
 // 1. KIỂM TRA ĐĂNG NHẬP
-if (!isset($_SESSION['auth_user']['user_id'])) {
-    $_SESSION['message'] = "Bạn cần đăng nhập để truy cập trang cá nhân.";
-    // Chuyển hướng về trang đăng nhập hoặc trang chủ
-    header("Location: login.php"); 
-    exit();
-}
+
 
 $user_id = $_SESSION['auth_user']['user_id'];
 $user_data = [];
@@ -133,4 +128,5 @@ include('includes/header.php');
 <?php 
 // Bao gồm Footer (Nơi chứa liên kết JS Bootstrap)
 include('includes/footer.php'); 
+
 ?>
