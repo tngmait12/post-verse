@@ -3,19 +3,19 @@ include('authentication.php');
 include('includes/header.php');
 
 // Lấy ID của user đang đăng nhập từ session
-if(isset($_SESSION['auth_user']['user_id'])){
+if (isset($_SESSION['auth_user']['user_id'])) {
   $user_id = $_SESSION['auth_user']['user_id'];
 
-  // Câu lệnh SQL để lấy thông tin user
-  $query = "SELECT * FROM users WHERE id='$user_id' LIMIT 1";
+  // Câu lệnh SQL để lấy thông tin user và social links
+  $query = "SELECT u.*, s.facebook, s.github, s.linkedin 
+            FROM users u 
+            LEFT JOIN socials s ON u.id = s.user_id 
+            WHERE u.id='$user_id' LIMIT 1";
   $query_run = mysqli_query($con, $query);
 
-  if(mysqli_num_rows($query_run) > 0)
-  {
+  if (mysqli_num_rows($query_run) > 0) {
     $user_data = mysqli_fetch_array($query_run);
-  }
-  else
-  {
+  } else {
     // Xử lý nếu không tìm thấy user
     $_SESSION['message'] = "Something went wrong!";
     header("Location: index.php");
@@ -31,7 +31,7 @@ if(isset($_SESSION['auth_user']['user_id'])){
       <ul class="breadcrumbs mb-3">
         <li class="nav-home">
           <a href="#">
-          <i class="icon-home"></i>
+            <i class="icon-home"></i>
           </a>
         </li>
         <li class="separator">
@@ -56,9 +56,9 @@ if(isset($_SESSION['auth_user']['user_id'])){
             <div class="profile-picture">
               <div class="avatar avatar-xl">
                 <?php if (!empty($user_data['image'])): ?>
-                  <img src="../uploads/users/<?= $user_data['image']; ?>" alt="" class="avatar-img rounded-circle">
+                    <img src="../uploads/users/<?= $user_data['image']; ?>" alt="" class="avatar-img rounded-circle">
                 <?php else: ?>
-                  <img src="assets/img/profile.jpg" alt="" class="avatar-img rounded-circle">
+                    <img src="assets/img/profile.jpg" alt="" class="avatar-img rounded-circle">
                 <?php endif; ?>
               </div>
             </div>
@@ -83,15 +83,30 @@ if(isset($_SESSION['auth_user']['user_id'])){
                       <div class="col-md-4 col-5"><strong>Gender</strong></div>
                       <div class="col-md-8 col-7 text-capitalize">: <?= htmlspecialchars($user_data['gender']); ?></div>
                     </div>
-                    <?php if (!empty($user_data['social'])): ?>
-                    <div class="row mt-2 align-items-center">
-                      <div class="col-md-4 col-5"><strong>Social</strong></div>
-                      <div class="col-md-8 col-7">: 
-                        <a href="<?= htmlspecialchars($user_data['social']); ?>" target="_blank" class="btn btn-icon btn-round btn-primary btn-sm">
-                          <i class="fab fa-facebook-f"></i>
-                        </a>
-                      </div>
-                    </div>
+                    <?php if (!empty($user_data['facebook']) || !empty($user_data['github']) || !empty($user_data['linkedin'])): ?>
+                        <div class="row mt-2 align-items-center">
+                          <div class="col-md-4 col-5"><strong>Social</strong></div>
+                          <div class="col-md-8 col-7">:
+                            <?php if (!empty($user_data['facebook'])): ?>
+                                <a href="<?= htmlspecialchars($user_data['facebook']); ?>" target="_blank"
+                                  class="btn btn-icon btn-round btn-primary btn-sm me-1">
+                                  <i class="fab fa-facebook-f"></i>
+                                </a>
+                            <?php endif; ?>
+                            <?php if (!empty($user_data['github'])): ?>
+                                <a href="<?= htmlspecialchars($user_data['github']); ?>" target="_blank"
+                                  class="btn btn-icon btn-round btn-dark btn-sm me-1">
+                                  <i class="fab fa-github"></i>
+                                </a>
+                            <?php endif; ?>
+                            <?php if (!empty($user_data['linkedin'])): ?>
+                                <a href="<?= htmlspecialchars($user_data['linkedin']); ?>" target="_blank"
+                                  class="btn btn-icon btn-round btn-info btn-sm me-1">
+                                  <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            <?php endif; ?>
+                          </div>
+                        </div>
                     <?php endif; ?>
                   </div>
                 </div>
