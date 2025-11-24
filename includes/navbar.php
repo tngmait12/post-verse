@@ -22,7 +22,7 @@
            placeholder="Search..."
            aria-label="Search"
            required
-           style="height: 35px; width: 150px;">
+           style="height: 35px; width: 120px;">
     
     <button class=" d-flex align-items-center justify-content-center"
         type="submit"
