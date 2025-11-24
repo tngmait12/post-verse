@@ -1,5 +1,4 @@
 <?php
-
 include('includes/config.php');
 
 $page_title = "Login Page";
@@ -8,12 +7,13 @@ $meta_keyword = "PHP, Blog, Website, HTML, CSS, JS, BOOTSTRAP";
 
 include('includes/header.php'); 
 
-if(isset($_SESSION['auth']))
+if (isset($_SESSION['auth']))
 {
     $_SESSION['message'] = "You are already logged in";
-    header('Location: index.php');
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
     exit(0);
 }
+$_SESSION['login-referer'] = $_SERVER['HTTP_REFERER'] ?? 'index.php';
 ?>
 
 <section class="py-5">
@@ -40,6 +40,8 @@ if(isset($_SESSION['auth']))
           </div>
           <div class="card-footer text-center">
             <small>Don't have an account? <a href="register.php">Register here</a></small>
+            <br>
+            <small><a href="forgot_password.php">Forgot Password?</a></small>
           </div>
         </div>
       </div>

@@ -1,8 +1,20 @@
+<?php 
+if (isset($con)) {
+    
+    $navbar_categories_query = "SELECT name, slug FROM categories WHERE navbar_status='0' AND status='0' LIMIT 4";
+    $navbar_categories_result = mysqli_query($con, $navbar_categories_query);
+} else {
+    
+    $navbar_categories_result = false;
+}
+
+?>
+
 <nav class="main-nav navbar navbar-expand-lg">
   <div class="container">
     <!-- Logo -->
     <a class="navbar-brand" href="index.php">
-      <img class="logo-main" src="images/logo.svg" alt="logo" />
+      <h2>POST VERSE</h2>
     </a>
     <!-- Toogle Button -->
     <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#mainNav">
@@ -16,17 +28,31 @@
         <li class="nav-item">
           <a class="nav-link" href="index.php">Home </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="about.php">About </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="contact.php">Contact</a>
-        </li>
+        <?php
+        if ($navbar_categories_result && mysqli_num_rows($navbar_categories_result) > 0) {
+          foreach ($navbar_categories_result as $item) {
+            ?>
+            <li class="nav-item">
+              <a class="nav-link" href="category.php?slug=<?= $item['slug']; ?>"><?= $item['name']; ?></a>
+            </li>
+            <?php
+          }
+        }
+        ?>
         <!-- Authentication Links -->
         <?php if (isset($_SESSION['auth'])) : ?>
-          <li class="nav-item">
-            <a class="nav-link" href="logout.php">Logout</a>
-          </li>
+          <div class="dropdown show">
+            <li class="nav-item">
+              <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Account
+              </a>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="<?= $base_url ?>/admin/index.php">Admin Page</a>
+                <a class="dropdown-item" href="#">Profile</a>
+                <a class="dropdown-item" href="logout.php">Logout</a>
+              </div>
+            </li>
+          </div>
         <?php else : ?>
           <li class="nav-item">
             <a class="nav-link" href="login.php">Login</a>

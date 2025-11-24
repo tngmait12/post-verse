@@ -58,7 +58,7 @@ if (isset($_SESSION['auth_user']['user_id'])) {
                 <?php if (!empty($user_data['image'])): ?>
                     <img src="../uploads/users/<?= $user_data['image']; ?>" alt="" class="avatar-img rounded-circle">
                 <?php else: ?>
-                    <img src="assets/img/profile.jpg" alt="" class="avatar-img rounded-circle">
+                  <img src="../images/user.png" alt="" class="avatar-img rounded-circle">
                 <?php endif; ?>
               </div>
             </div>

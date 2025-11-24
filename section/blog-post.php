@@ -8,13 +8,10 @@
 
     $pagination = ceil($count / POSTS_IN_PAGE);
 
-    // $post_query = "SELECT * FROM posts AS p JOIN users AS u ON p.user_id = u.id";
-    // $result = mysqli_query($con, $post_query);
-    // $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    $query = 'SELECT p.*, u.fname, u.lname 
+    $query = 'SELECT p.*, u.fname, u.lname, c.name AS category_name 
         FROM posts AS p 
         JOIN users AS u ON p.user_id = u.id 
+        JOIN categories AS c ON p.category_id = c.id 
         WHERE p.status = 0
         LIMIT ' . POSTS_IN_PAGE . ' 
         OFFSET ' . (($page - 1) * POSTS_IN_PAGE);
@@ -35,7 +32,7 @@
             </div>
             <div class="blog-post-content">
                 <div class="blog-post-tag">
-                    <a href="category.html">Travel</a>
+                    <a href="#"><?= $row['category_name'] ?></a>
                 </div>
                 <div class="blog-post-title">
                     <a href="single-blog.php?slug=<?php echo $row['slug'] ?>">
@@ -44,7 +41,7 @@
                 </div>
                 <div class="blog-post-meta">
                     <ul>
-                        <li>By <a href="about.html"><?= $row['lname'] . ' ' . $row['fname'] ?></a></li>
+                        <li>By <a href="about.html"><?= $row['fname'] . ' ' . $row['lname'] ?></a></li>
                         <li>
                             <i class="fa fa-clock-o"></i>
                             <?php 

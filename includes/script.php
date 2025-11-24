@@ -8,6 +8,7 @@
 <script src="vendor/g-map/gmap.js"></script>
 <!-- Main JS -->
 <script src="js/script.js"></script>
+
 </body>
 
 </html>
