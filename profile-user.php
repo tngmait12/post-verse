@@ -13,7 +13,7 @@ $user_data = [];
 $user_posts = [];
 
 // --- A. LẤY THÔNG TIN NGƯỜI DÙNG (có avatar, phone, social, gender) ---
-$query_user = "SELECT fname, lname, email, created_at, image, phone, social, gender 
+$query_user = "SELECT fname, lname, email, created_at, image, phone, gender 
                FROM users 
                WHERE id = ? 
                LIMIT 1";
@@ -91,10 +91,6 @@ include('includes/header.php');
                         <p class="card-text">📞 <?= htmlspecialchars($user_data['phone']) ?></p>
                     <?php endif; ?>
 
-                    <?php if (!empty($user_data['social'])): ?>
-                        <p class="card-text">🔗 <a href="<?= htmlspecialchars($user_data['social']) ?>" target="_blank"><?= htmlspecialchars($user_data['social']) ?></a></p>
-                    <?php endif; ?>
-
                     <?php if (!empty($user_data['gender'])): ?>
                         <p class="card-text">⚧ <?= ucfirst($user_data['gender']) ?></p>
                     <?php endif; ?>
@@ -114,41 +110,61 @@ include('includes/header.php');
 
         <!-- Bài viết của người dùng -->
         <div class="col-lg-8">
-            <h3 class="mb-3">✍️ Các bài viết đã đăng</h3>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+    <h3 class="mb-0">✍️ Các bài viết đã đăng</h3>
+    <a href="admin/add-post.php" class="btn btn-primary ms-auto">
+        <i class="fa fa-plus"></i> Tạo bài viết mới
+    </a>
+</div>
 
             <?php if (count($user_posts) > 0): ?>
-                <?php foreach ($user_posts as $post): ?>
-                    <div class="card mb-3 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h5 class="card-title">
-                                        <a href="single-blog.php?slug=<?= htmlspecialchars($post['slug']) ?>" class="text-decoration-none">
-                                            <?= htmlspecialchars($post['name']) ?>
-                                        </a>
-                                    </h5>
-                                    <p class="card-text text-muted small mb-1">
-                                        Ngày đăng: <?= date('d/m/Y', strtotime($post['created_at'])) ?>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <?php if (!empty($post['image']) && file_exists("uploads/posts/" . $post['image'])): ?>
-                                <img src="uploads/posts/<?= $post['image'] ?>" class="img-fluid mb-2" style="max-height:200px; object-fit:cover;">
-                            <?php endif; ?>
-
-                            <hr class="mt-2 mb-2">
-                            <p class="card-text">
-                                <?= substr(strip_tags($post['description']), 0, 150) ?>...
-                            </p>
-                        </div>
+    <?php foreach ($user_posts as $post): ?>
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h5 class="card-title">
+                            <a href="single-blog.php?slug=<?= htmlspecialchars($post['slug']) ?>" class="text-decoration-none">
+                                <?= htmlspecialchars($post['name']) ?>
+                            </a>
+                        </h5>
+                        <p class="card-text text-muted small mb-1">
+                            Ngày đăng: <?= date('d/m/Y', strtotime($post['created_at'])) ?>
+                        </p>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <div class="alert alert-info">
-                    Bạn chưa đăng bất kỳ bài viết nào.
+
+                    <!-- Nút Sửa / Xóa -->
+                    <div class="" role="group" ">
+                        <a href="admin/edit-post.php?id=<?= $post['id'] ?>" class="btn btn-sm btn-success" title="Chỉnh sửa bài viết">
+                            <i class="fa fa-pencil"></i> Sửa
+                        </a>
+                        <form action="admin/code.php" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">
+                            <input type="hidden" name="delete_post" value="<?= $post['id'] ?>">
+                            <button type="submit" class="btn btn-sm btn-danger" title="Xóa bài viết">
+                                <i class="fa fa-trash"></i> Xóa
+                            </button>
+                        </form>
+                    </div>
                 </div>
-            <?php endif; ?>
+
+                <?php if (!empty($post['image']) && file_exists("uploads/posts/" . $post['image'])): ?>
+                    <img src="uploads/posts/<?= $post['image'] ?>" class="img-fluid mb-2" style="max-height:200px; object-fit:cover;">
+                <?php endif; ?>
+
+                <hr class="mt-2 mb-2">
+                <p class="card-text">
+               <?= substr(strip_tags($post['description'] ?? ''), 0, 150) ?>...
+
+                </p>
+            </div>
+        </div>
+    <?php endforeach; ?>
+<?php else: ?>
+    <div class="alert alert-info">
+        Bạn chưa đăng bất kỳ bài viết nào.
+    </div>
+<?php endif; ?>
+
         </div>
     </div>
 </div>
