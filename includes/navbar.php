@@ -1,3 +1,15 @@
+<?php 
+if (isset($con)) {
+    
+    $navbar_categories_query = "SELECT name, slug FROM categories WHERE navbar_status='0' AND status='0' LIMIT 4";
+    $navbar_categories_result = mysqli_query($con, $navbar_categories_query);
+} else {
+    
+    $navbar_categories_result = false;
+}
+
+?>
+
 <nav class="main-nav navbar navbar-expand-lg">
   <div class="container">
     <!-- Logo -->
@@ -16,12 +28,17 @@
         <li class="nav-item">
           <a class="nav-link" href="index.php">Home </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="about.php">About </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="contact.php">Contact</a>
-        </li>
+        <?php
+        if ($navbar_categories_result && mysqli_num_rows($navbar_categories_result) > 0) {
+          foreach ($navbar_categories_result as $item) {
+            ?>
+            <li class="nav-item">
+              <a class="nav-link" href="category.php?slug=<?= $item['slug']; ?>"><?= $item['name']; ?></a>
+            </li>
+            <?php
+          }
+        }
+        ?>
         <!-- Authentication Links -->
         <?php if (isset($_SESSION['auth'])) : ?>
           <div class="dropdown show">
