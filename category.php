@@ -127,7 +127,7 @@ include('includes/header.php');
 
                 </div>
 
-                <?php include('includes/trending-post.php') ?>
+                <?php include('section/list-categories.php') ?>
             </div>
 
         <?php else : ?>
