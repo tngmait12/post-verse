@@ -1,5 +1,3 @@
-<?php include('includes/section-instagram.php'); ?>
-
 <section class="footer">
   <div class="container-fluid">
     <div class="row">

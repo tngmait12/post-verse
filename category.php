@@ -5,7 +5,7 @@ include('config.php');
 $slug = $_GET["slug"] ?? '';
 
 // 1. Lấy thông tin chi tiết Danh mục (Category)
-$category_query = "SELECT * FROM categories WHERE slug='$slug' AND status='0' LIMIT 1";
+$category_query = "SELECT * FROM categories WHERE slug='$slug' AND status='1' LIMIT 1";
 $category_result = mysqli_query($con, $category_query);
 $category_data = mysqli_fetch_assoc($category_result);
 
@@ -14,8 +14,6 @@ if ($category_data) {
 
     // Thiết lập SEO cho trang Category
     $page_title = $category_data['meta_title'];
-    $meta_description = $category_data['meta_description'];
-    $meta_keyword = $category_data['meta_keyword'];
 
     // 2. Lấy danh sách Bài viết thuộc Danh mục này
     // Lấy 10 bài viết/trang (Pagination sẽ được áp dụng sau)
@@ -28,7 +26,7 @@ if ($category_data) {
           FROM posts p
           JOIN categories c ON p.category_id = c.id
           JOIN users u ON p.user_id = u.id
-          WHERE p.category_id = '$category_id' AND p.status='0'
+          WHERE p.category_id = '$category_id' AND p.status='1'
           ORDER BY p.created_at DESC
           LIMIT 10
       ";
@@ -39,7 +37,7 @@ if ($category_data) {
     $count_query = "
           SELECT COUNT(id) AS total_posts
           FROM posts 
-          WHERE category_id = '$category_id' AND status='0'
+          WHERE category_id = '$category_id' AND status='1'
       ";
     $count_result = mysqli_query($con, $count_query);
     $count_data = mysqli_fetch_assoc($count_result);
@@ -47,9 +45,6 @@ if ($category_data) {
 } else {
     // Xử lý nếu Category không tồn tại
     $page_title = "Không tìm thấy danh mục";
-    $meta_description = "Danh mục không tồn tại hoặc đã bị ẩn";
-    // Chuyển hướng hoặc hiển thị trang 404
-    // header("Location: 404.php"); exit();
 }
 
 include('includes/header.php');

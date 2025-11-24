@@ -92,8 +92,6 @@ if (isset($_POST['add_category'])) {
 
     $description = $_POST['description'];
     $meta_title = $_POST['meta_title'];
-    $meta_description = $_POST['meta_description'];
-    $meta_keyword = $_POST['meta_keyword'];
     $status = $_POST['status'] == true ? '1' : '0';
     $navbar_status = $_POST['navbar_status'] == true ? '1' : '0';
 
@@ -105,8 +103,8 @@ if (isset($_POST['add_category'])) {
         header('Location: add-category.php');
         exit(0);
     } else {
-        $query = "INSERT INTO categories (name, slug, description, meta_title, meta_description, meta_keyword, navbar_status,status) VALUES 
-        ('$name', '$slug', '$description', '$meta_title', '$meta_description', '$meta_keyword', '$navbar_status', '$status')";
+        $query = "INSERT INTO categories (name, slug, description, meta_title, navbar_status,status) VALUES 
+        ('$name', '$slug', '$description', '$meta_title', '$meta_description', '$navbar_status', '$status')";
         $query_run = mysqli_query($con, $query);
 
         if ($query_run) {
@@ -131,13 +129,10 @@ if (isset($_POST['update_category'])) {
 
     $description = $_POST['description'];
     $meta_title = $_POST['meta_title'];
-    $meta_description = $_POST['meta_description'];
-    $meta_keyword = $_POST['meta_keyword'];
     $status = $_POST['status'] == true ? '1' : '0';
     $navbar_status = $_POST['navbar_status'] == true ? '1' : '0';
 
-    $query = "UPDATE categories SET name='$name', slug='$slug', description='$description', meta_title='$meta_title', 
-    meta_description='$meta_description', meta_keyword='$meta_keyword', navbar_status='$navbar_status', status='$status' WHERE id='$cat_id' ";
+    $query = "UPDATE categories SET name='$name', slug='$slug', description='$description', meta_title='$meta_title', navbar_status='$navbar_status', status='$status' WHERE id='$cat_id' ";
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {
@@ -181,8 +176,7 @@ if (isset($_POST['add_post'])) {
     $description = $_POST['description'];
     $meta_title = $_POST['meta_title'];
     $meta_description = $_POST['meta_description'];
-    $meta_keyword = $_POST['meta_keyword'];
-    $status = $_POST['status'] == true ? '1' : '0';
+    $status = 0;
     $image = $_FILES['image']['name'];
 
     if ($image != NULL) {
@@ -191,7 +185,7 @@ if (isset($_POST['add_post'])) {
 
     }
     $query = "INSERT INTO posts (name, slug, description, image, meta_title, meta_description, meta_keyword, status,category_id, user_id) VALUES 
-    ('$name', '$slug', '$description', '$filename', '$meta_title', '$meta_description', '$meta_keyword', '$status','$category_id', '$user_id')";
+    ('$name', '$slug', '$description', '$filename', '$meta_title', '$meta_description', '$status','$category_id', '$user_id')";
     $query_run = mysqli_query($con, $query);
     if ($query_run) {
         if ($image != NULL) {
@@ -219,8 +213,6 @@ if (isset($_POST['edit_post'])) {
     $description = $_POST['description'];
     $meta_title = $_POST['meta_title'];
     $meta_description = $_POST['meta_description'];
-    $meta_keyword = $_POST['meta_keyword'];
-    $status = $_POST['status'] == true ? '1' : '0';
 
     $new_image = $_FILES['image']['name'];
     $old_image = $_POST['old_image'];
@@ -233,7 +225,7 @@ if (isset($_POST['edit_post'])) {
     }
 
     $query = "UPDATE posts SET name='$name', slug='$slug', description='$description', image='$filename', meta_title='$meta_title', 
-    meta_description='$meta_description', meta_keyword='$meta_keyword', status='$status', category_id='$category_id' WHERE id='$post_id' ";
+    meta_description='$meta_description', category_id='$category_id' WHERE id='$post_id' ";
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {

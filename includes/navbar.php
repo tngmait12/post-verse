@@ -1,7 +1,7 @@
 <?php 
 if (isset($con)) {
     
-    $navbar_categories_query = "SELECT name, slug FROM categories WHERE navbar_status='0' AND status='0' LIMIT 4";
+    $navbar_categories_query = "SELECT name, slug FROM categories WHERE navbar_status='1' AND status='1' LIMIT 4";
     $navbar_categories_result = mysqli_query($con, $navbar_categories_query);
 } else {
     
@@ -62,18 +62,6 @@ if (isset($con)) {
           </li>
         <?php endif; ?>
         <!-- End Authentication Links -->
-      </ul>
-      <!-- Social Link -->
-      <ul class="main-nav-social">
-        <li>
-          <a href="#"><i class="fa fa-facebook"></i></a>
-        </li>
-        <li>
-          <a href="#"><i class="fa fa-twitter"></i></a>
-        </li>
-        <li>
-          <a href="#"><i class="fa fa-instagram"></i></a>
-        </li>
       </ul>
     </div>
   </div>

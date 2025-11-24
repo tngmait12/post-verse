@@ -54,14 +54,6 @@ include('includes/header.php');
                                         <label for="meta_title" class="fw-bold">Meta title</label>
                                         <input type="text" class="form-control" id="meta_title" name="meta_title" placeholder="Enter Meta Title">
                                     </div>
-                                    <div class="form-group">
-                                        <label for="meta_description" class="fw-bold">Meta Description</label>
-                                        <textarea name="meta_description"></textarea>
-                                    </div>  
-                                    <div class="form-group">
-                                        <label for="meta_keyword" class="fw-bold">Meta Keyword</label>
-                                        <textarea name="meta_keyword"></textarea>
-                                    </div>
                                     <div class="form-group mt-3">
                                         <div class="form-check">
                                             <label class="form-check-label">Navbar Status</label>

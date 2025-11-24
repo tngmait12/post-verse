@@ -1,70 +1,46 @@
 <?php
-  define('LIMIT_FEATURED', 1);
-
-  $query = "SELECT 
-    p.id, 
-    p.name,
-    p.image,
-    p.slug,
-    p.created_at,
-    u.lname,
-    u.fname,
-    u.image AS avata,
-    COUNT(CASE WHEN pr.reaction = 'like' THEN 1 END) AS like_count,
-    COUNT(CASE WHEN pr.reaction = 'dislike' THEN 1 END) AS dislike_count
-    FROM posts p
-    LEFT JOIN post_reactions pr ON p.id = pr.source_id
-    JOIN users u ON p.user_id = u.id
-    GROUP BY p.id, p.name, p.image, p.slug, p.created_at
-    ORDER BY 
-        CASE 
-            WHEN COUNT(CASE WHEN pr.reaction = 'dislike' THEN 1 END) = 0 THEN 1
-            ELSE 0
-        END,
-        ROUND(
-            COUNT(CASE WHEN pr.reaction = 'like' THEN 1 END) * 1.0 / 
-            NULLIF(COUNT(CASE WHEN pr.reaction = 'dislike' THEN 1 END), 0), 2
-        ) DESC
-    LIMIT " . LIMIT_FEATURED;
-
-  $result = mysqli_fetch_assoc(mysqli_execute_query($con, $query));
+  // Loại bỏ logic truy vấn bài viết nổi bật cũ (LIMIT_FEATURED, $query, $result)
+  // File này bây giờ chỉ chứa HTML giới thiệu tĩnh.
 ?>
 
-<section class="featured">
+<section class="hero-section py-5">
   <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <article class="featured-post row">
-          <div class="featured-post-content col-lg-7 col-12">
-            <div class="featured-post-author">
-              <img src="uploads/users/<?= $result['avata'] ?>" alt="author" />
-              <p>By <span><?= $result['fname'] . ' ' . $result['lname'] ?></span></p>
-            </div>
-            <a href="single-blog.php?slug=<?php echo $result['slug'] ?>" class="featured-post-title" 
-              style="
-                font-size: 2em;
-                display: -webkit-box;
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
-                overflow: hidden;"
-            >
-              <?= $result['name'] ?>
-            </a>
-            <ul class="featured-post-meta">
-              <li>
-                <i class="fa fa-clock-o"></i>
-                <?php 
-                    $created_at = strtotime($result['created_at']); 
-                    echo date('F j, Y, H:i', $created_at);
-                ?>
-              </li>
-            </ul>
-          </div>
-          <div class="featured-post-thumb col-lg-5 col-12">
-            <img src="uploads/posts/<?= $result['image'] ?>" alt="feature-post-thumb" width="100%" />
-          </div>
-        </article>
+    <div class="row align-items-center">
+      
+      <div class="col-lg-7 col-md-12 mb-4 mb-lg-0">
+        <div class="p-3">
+          
+          <h1 class="display-3 font-weight-bold mb-3 text-primary">
+            Chào mừng đến với Post Verse
+          </h1>
+          
+          <p class="lead mb-4 text-secondary">
+            Nền tảng chia sẻ và quản lý bài viết hàng đầu, tập trung vào lĩnh vực **kiến thức lập trình, công nghệ, và phát triển mã nguồn mở**.
+          </p>
+
+          <ul class="list-unstyled mb-4">
+            <li><i class="fa fa-check-circle text-success mr-2"></i> Kiến thức lập trình từ cơ bản đến nâng cao.</li>
+            <li><i class="fa fa-share-alt text-success mr-2"></i> Cộng đồng chia sẻ, bình luận và tương tác trực tuyến.</li>
+            <li><i class="fa fa-code text-success mr-2"></i> Nội dung chất lượng, được quản lý chặt chẽ.</li>
+          </ul>
+          
+          <a href="register.php" class="btn btn-primary btn-lg shadow-sm mr-3">
+            Tham gia ngay <i class="fa fa-arrow-right ml-2"></i>
+          </a>
+          <a href="index.php#latest-articles" class="btn btn-outline-secondary btn-lg">
+            Đọc bài viết <i class="fa fa-book ml-2"></i>
+          </a>
+        </div>
       </div>
+      
+      <div class="col-lg-5 col-md-12 text-center">
+        <img src="uploads/placeholder_coding.png" 
+             alt="Post Verse Coding Illustration" 
+             class="img-fluid rounded shadow-lg"
+             style="max-height: 400px; object-fit: cover;">
+        <p class="text-muted mt-2 small">Chia sẻ kiến thức, kết nối cộng đồng.</p>
+      </div>
+      
     </div>
   </div>
 </section>

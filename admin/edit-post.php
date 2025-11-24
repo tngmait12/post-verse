@@ -77,10 +77,6 @@ include('includes/header.php');
                                                     <textarea name="meta_description"><?= $post_data['meta_description']; ?></textarea>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="meta_keyword" class="fw-bold">Meta Keyword</label>
-                                                    <textarea name="meta_keyword"><?= $post_data['meta_keyword']; ?></textarea>
-                                                </div>
-                                                <div class="form-group">
                                                     <label for="role_as" class="fw-bold">Category List</label>
                                                     <?php
                                                     $category = "SELECT id, name FROM categories WHERE status='0' ";
@@ -106,13 +102,6 @@ include('includes/header.php');
                                                     <?php
                                                     }
                                                     ?>
-                                                </div>
-                                                <div class="form-group mt-3">
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">Status</label>
-                                                        <input class="form-check-input" name="status" <?= $post_data['status'] == '1' ? 'checked' : '' ?> type="checkbox">
-                                                        Checked = Hidden, Unchecked = Visible
-                                                    </div>
                                                 </div>
                                                 <div class="card-action">
                                                     <button type="submit" name="edit_post" class="btn btn-success">Submit</button>
