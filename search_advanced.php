@@ -23,6 +23,15 @@ $to_date_param = null;
 if ($to_date) {
     $to_date_param = $to_date . " 23:59:59";
 }
+// d. Bộ lọc theo danh mục
+$category_id = isset($_GET['category_id']) && !empty($_GET['category_id']) ? $_GET['category_id'] : null;
+
+if ($category_id) {
+    $where_clauses[] = "p.category_id = ?";
+    $bind_types .= 'i';      // category_id là integer
+    $bind_params[] = $category_id;
+}
+
 
 // --- 2. XÂY DỰNG ĐIỀU KIỆN ORDER BY CHÍNH ---
 
@@ -41,6 +50,7 @@ elseif ($sort_like == "most_like") {
 } elseif ($sort_like == "least_like") {
     $order_by_main = "likes_count ASC";
 } 
+
 // ƯU TIÊN 3: Sắp xếp theo Ngày tạo (Nếu không có tiêu chí nào khác)
 elseif ($sort_date == "oldest") {
     $order_by_main = "p.created_at ASC";
@@ -59,11 +69,18 @@ $bind_types = '';
 $bind_params = [];   
 
 // a. Điều kiện Tìm kiếm (Luôn có - 3 tham số string)
-$where_clauses[] = "(p.name LIKE ? OR p.description LIKE ? OR p.meta_keyword LIKE ?)";
-$bind_types .= 'sss';
+$where_clauses[] = "(p.name LIKE ? OR p.description LIKE ? )";
+$bind_types .= 'ss';
 $bind_params[] = $search_param;
 $bind_params[] = $search_param;
-$bind_params[] = $search_param;
+
+$categories = [];
+$cat_query = mysqli_query($con, "SELECT id, name FROM categories ORDER BY name ASC");
+if ($cat_query) {
+    while($cat = mysqli_fetch_assoc($cat_query)){
+        $categories[] = $cat;
+    }
+}
 
 // b. Bộ lọc theo ngày BẮT ĐẦU 
 if ($from_date) {
@@ -186,6 +203,18 @@ include(__DIR__ . "/includes/header.php"); // Include Header
                     <option value="least_comment" <?= ($sort_comment == "least_comment" ? "selected" : "") ?>>Ít nhất</option>
                 </select>
             </div>
+            <div>
+    <label>Danh mục:</label>
+    <select name="category_id" onchange="this.form.submit()">
+        <option value="">--- Tất cả ---</option>
+        <?php foreach ($categories as $cat): ?>
+            <option value="<?= $cat['id'] ?>" <?= ($category_id == $cat['id'] ? "selected" : "") ?>>
+                <?= htmlspecialchars($cat['name']) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</div>
+
 
             <div>
                 <label for="from_date">Thời gian từ ngày:</label>
