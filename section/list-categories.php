@@ -1,8 +1,9 @@
 <?php   
     $query = "SELECT c.id, c.name, c.slug, 
-        (SELECT COUNT(*) FROM posts p WHERE p.category_id = c.id AND status = 1) AS count
+        (SELECT COUNT(*) FROM posts p WHERE p.category_id = c.id AND status = 0) AS count
         FROM categories c 
         WHERE c.slug != ?";
+    // 0 la visible 
 
     $stmt = mysqli_prepare($con, $query);
     mysqli_stmt_bind_param($stmt, 's', $slug);
