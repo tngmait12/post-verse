@@ -1,3 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style> /* Cần phải có thẻ <style> */
+    .btn {
+        padding: 10px 20px !important;
+        margin: 3px;
+        min-width: 20px !important;
+        font-size: 14px !important;
+    }
+    </style>
+</head>
+<body>
+    </body>
+</html>
 <?php
 include('includes/config.php');
 
@@ -173,3 +188,4 @@ include('includes/header.php');
 include('includes/footer.php');
 include('includes/script.php');
 ?>
+
