@@ -16,10 +16,12 @@
 
         if ($reply != null) {
             $parent_query = "SELECT parent_id FROM comments WHERE id = ?";
+
             $p_stmt = mysqli_prepare($con, $parent_query);
             mysqli_stmt_bind_param($p_stmt, 'i', $reply);
             mysqli_stmt_execute($p_stmt);
             $p_result = mysqli_stmt_get_result($p_stmt);
+            
             $result = mysqli_fetch_row($p_result)[0];
             $parent_id = $result != null ? $result : $reply;
         } else {

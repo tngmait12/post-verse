@@ -8,20 +8,20 @@
 
     $pagination = ceil($count / POSTS_IN_PAGE);
 
-    $query = 'SELECT p.*, u.fname, u.lname, c.name AS category_name 
-        FROM posts AS p 
-        JOIN users AS u ON p.user_id = u.id 
-        JOIN categories AS c ON p.category_id = c.id 
+    $query = 'SELECT p.*, u.fname, u.lname, c.name AS category_name
+        FROM posts AS p
+        JOIN users AS u ON p.user_id = u.id
+        JOIN categories AS c ON p.category_id = c.id
         WHERE p.status = 0
-        LIMIT ' . POSTS_IN_PAGE . ' 
+        ORDER BY p.created_at DESC
+        LIMIT ' . POSTS_IN_PAGE . '
         OFFSET ' . (($page - 1) * POSTS_IN_PAGE);
+
 
     $stmt = mysqli_prepare($con, $query);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $rows_result = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    $count_post = count($rows_result);
 ?>
 
 <?php if (count($rows_result) > 0): ?>

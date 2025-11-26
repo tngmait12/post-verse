@@ -42,7 +42,7 @@ header("single-blog.php?slug=" . urldecode($slug));
 <section class="blog-single">
   <div class="container sticky">
     <div class="row">
-      <div class="col-lg-5 order-2 order-lg-2">
+      <div class="col-lg-4 order-2 order-lg-2">
         <div id="comments-section" class="border p-2 d-flex flex-column" 
           style="
             border-color: black; 
@@ -52,7 +52,8 @@ header("single-blog.php?slug=" . urldecode($slug));
           <?php include "section/comment.php" ?>
         </div>
       </div>
-      <div class="col-lg-7 order-1 order-lg-1">
+      <!-- post -->
+      <div class="col-lg-8 order-1 order-lg-1">
         <article class="single-blog">
           <a href="#" class="tag"><?= $post_result['category_name'] ?></a>
           <p class="title"><?= $post_result['name'] ?></p>
@@ -118,9 +119,9 @@ header("single-blog.php?slug=" . urldecode($slug));
 
   <script>
     document.addEventListener('click', function(e) {
-      var reac_status = null // status of reaction(like or dislike)
-      var source_reac = null // name table(post_reactions or comment_reactions)
-      var source_id = null // id of post or comment
+      let reac_status = null // status of reaction(like or dislike)
+      let source_reac = null // name table(post_reactions or comment_reactions)
+      let source_id = null // id of post or comment
 
       btn = e.target.closest('.btn_reac')
       if (!btn) return;
@@ -139,7 +140,7 @@ header("single-blog.php?slug=" . urldecode($slug));
       xhr.send('source_id=' + source_id + '&reaction_status=' + reac_status + '&source=' + source_reac)
       xhr.onload = function() {
         if (xhr.status === 200) {
-          var get_status = JSON.parse(xhr.responseText)
+          let get_status = JSON.parse(xhr.responseText)
 
           if (!get_status || get_status.status === 'error') return;
 
