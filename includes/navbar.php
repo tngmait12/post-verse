@@ -23,6 +23,27 @@ if (isset($con)) {
       <span class="icon-bar"></span>
     </button>
     <div class="collapse navbar-collapse nav-list" id="mainNav">
+
+
+    <!-- Search -->
+    <form class="d-flex align-items-center ml-3" method="GET" action="search_advanced.php" style="gap: 8px;">
+    
+    <input class="form-control"
+           type="search"
+           name="q"
+           placeholder="Search..."
+           aria-label="Search"
+           required
+           style="height: 35px; width: 120px;">
+    
+    <button class=" d-flex align-items-center justify-content-center"
+        type="submit"
+        style="height: 35px; width: 45px; padding: 0;">
+    <i class="fa fa-search"></i>
+</button>
+
+</form>
+      
       <!-- Navigation Links -->
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
@@ -48,7 +69,7 @@ if (isset($con)) {
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <a class="dropdown-item" href="<?= $base_url ?>/admin/index.php">Admin Page</a>
-                <a class="dropdown-item" href="#">Profile</a>
+                <a class="dropdown-item" href="profile-user.php">Profile</a>
                 <a class="dropdown-item" href="logout.php">Logout</a>
               </div>
             </li>
