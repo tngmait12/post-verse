@@ -66,6 +66,12 @@
                         <p>Profile</p>
                     </a>
                 </li>
+                <li class="nav-item" style="margin-top: 15px; padding: 0px 10px;">
+                    <a href="../index.php" style="background: rgba(255, 255, 255, 0.1); border-radius: 5px;">
+                        <i class="fas fa-arrow-left" style="color: #fff;"></i>
+                        <p style="color: #fff;">Back to client</p>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
