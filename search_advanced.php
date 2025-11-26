@@ -102,7 +102,7 @@ $where_sql = count($where_clauses) > 0 ? "WHERE " . implode(" AND ", $where_clau
 // Query chính:
 $sql = "
     SELECT
-        p.id, p.name, p.description, p.created_at, p.slug, 
+        p.id, p.name, p.description, p.created_at, p.slug,p.image, 
         COUNT(DISTINCT c.id) AS comments_count,
         COUNT(CASE WHEN pr.reaction = 'like' THEN 1 ELSE NULL END) AS likes_count
     FROM
@@ -165,6 +165,20 @@ include(__DIR__ . "/includes/header.php"); // Include Header
             margin-bottom: 5px;
             font-weight: bold;
         }
+        .result-item {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.result-thumb {
+    width: 160px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
     </style>
 </head>
 <body>
@@ -237,13 +251,33 @@ include(__DIR__ . "/includes/header.php"); // Include Header
     <?php if (mysqli_num_rows($result) > 0): ?>
         <?php while($row = mysqli_fetch_assoc($result)): ?>
             <div class="result-item mb-3">
-                <h4><a href="single-blog.php?slug=<?= htmlspecialchars($row['slug']) ?>"><?= htmlspecialchars($row['name']) ?></a></h4>
-                <p><?= substr(strip_tags($row['description']), 0, 120) ?>...</p>
-                <div class="small text-muted">
-                    👍 <?= $row['likes_count'] ?> — 💬 <?= $row['comments_count'] ?> — <?= $row['created_at'] ?>
-                </div>
-                <hr>
-            </div>
+
+    <?php if (!empty($row['image'])): ?>
+        <img src="uploads/posts/<?= htmlspecialchars($row['image']) ?>"
+             class="result-thumb"
+             alt="<?= htmlspecialchars($row['name']) ?>">
+    <?php endif; ?>
+
+    <div class="result-content">
+        <h4>
+            <a href="single-blog.php?slug=<?= htmlspecialchars($row['slug']) ?>">
+                <?= htmlspecialchars($row['name']) ?>
+            </a>
+        </h4>
+
+        <p><?= substr(strip_tags($row['description']), 0, 120) ?>...</p>
+
+        <div class="small text-muted">
+            👍 <?= $row['likes_count'] ?> — 
+            💬 <?= $row['comments_count'] ?> — 
+            <?= $row['created_at'] ?>
+        </div>
+    </div>
+
+</div>
+
+<hr>
+
         <?php endwhile; ?>
     <?php else: ?>
         <p>Không tìm thấy kết quả.</p>
