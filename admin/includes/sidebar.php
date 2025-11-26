@@ -54,6 +54,12 @@
                         <p>Posts</p>
                     </a>
                 </li>
+                <li class="nav-item <?= $page == 'review-posts.php' ? 'active' : ''; ?>">
+                    <a href="review-posts.php">
+                        <i class="fas fa-eye-slash"></i>
+                        <p>Review Posts</p>
+                    </a>
+                </li>
                 <li class="nav-item <?= $page == 'profile.php' ? 'active' : ''; ?>">
                     <a href="profile.php">
                         <i class="fas fa-user"></i>
