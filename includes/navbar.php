@@ -22,27 +22,26 @@ if (isset($con)) {
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <div class="collapse navbar-collapse nav-list" id="mainNav">
-
-
+  <div class="collapse navbar-collapse nav-list" id="mainNav">
     <!-- Search -->
     <form class="d-flex align-items-center ml-3" method="GET" action="search_advanced.php" style="gap: 8px;">
-    
-    <input class="form-control"
-           type="search"
-           name="q"
-           placeholder="Search..."
-           aria-label="Search"
-           required
-           style="height: 35px; width: 120px;">
-    
-    <button class=" d-flex align-items-center justify-content-center"
+      
+      <input class="form-control"
+            type="search"
+            name="q"
+            placeholder="Search..."
+            aria-label="Search"
+            required
+            style="height: 35px; width: 120px;">
+      
+      <button class=" d-flex align-items-center justify-content-center"
         type="submit"
-        style="height: 35px; width: 45px; padding: 0;">
-    <i class="fa fa-search"></i>
-</button>
+        style="height: 35px; width: 45px; padding: 0;"
+      >
+        <i class="fa fa-search"></i>
+      </button>
 
-</form>
+  </form>
       
       <!-- Navigation Links -->
       <ul class="navbar-nav ml-auto">

@@ -3,7 +3,7 @@
 
     define('POSTS_IN_PAGE', 3);
 
-    $count_post = "SELECT COUNT(*) AS count FROM posts WHERE status = 0";
+    $count_post = "SELECT COUNT(*) AS count FROM posts WHERE status = 1";
     $count = (int)mysqli_query($con, $count_post)->fetch_assoc()['count'];
 
     $pagination = ceil($count / POSTS_IN_PAGE);
@@ -12,7 +12,7 @@
         FROM posts AS p
         JOIN users AS u ON p.user_id = u.id
         JOIN categories AS c ON p.category_id = c.id
-        WHERE p.status = 0
+        WHERE p.status = 1
         ORDER BY p.created_at DESC
         LIMIT ' . POSTS_IN_PAGE . '
         OFFSET ' . (($page - 1) * POSTS_IN_PAGE);

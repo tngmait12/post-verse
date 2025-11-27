@@ -1,192 +1,246 @@
 <?php
+    // include __DIR__ . "/admin/config/dbcon.php";
+
+    // // --- 1. LẤY & CHUẨN BỊ CÁC THAM SỐ TỪ URL ---
+
+    // // a. Tìm kiếm
+    // $q = isset($_GET['q']) ? $_GET['q'] : "";
+    // $search_param = "%" . $q . "%"; 
+
+    // // b. 3 Bộ lọc Sắp xếp Riêng biệt
+    // // Mặc định là 'newest' (Mới nhất)
+    // $sort_date = isset($_GET['sort_date']) ? $_GET['sort_date'] : "newest"; 
+    // $sort_like = isset($_GET['sort_like']) ? $_GET['sort_like'] : ""; // Mặc định rỗng
+    // $sort_comment = isset($_GET['sort_comment']) ? $_GET['sort_comment'] : ""; // Mặc định rỗng
+
+    // // c. Bộ lọc theo ngày (Giữ nguyên)
+    // $from_date = isset($_GET['from_date']) && !empty($_GET['from_date']) ? $_GET['from_date'] : null;
+    // $to_date = isset($_GET['to_date']) && !empty($_GET['to_date']) ? $_GET['to_date'] : null;
+
+    // $to_date_param = null;
+    // if ($to_date) {
+    //     $to_date_param = $to_date . " 23:59:59";
+    // }
+    // // d. Bộ lọc theo danh mục
+    // $category_id = isset($_GET['category_id']) && !empty($_GET['category_id']) ? $_GET['category_id'] : null;
+
+    // if ($category_id) {
+    //     $where_clauses[] = "p.category_id = ?";
+    //     $bind_types .= 'i';      // category_id là integer
+    //     $bind_params[] = $category_id;
+    // }
 
 
-include __DIR__ . "/admin/config/dbcon.php";
+    // // --- 2. XÂY DỰNG ĐIỀU KIỆN ORDER BY CHÍNH ---
 
-// --- 1. LẤY & CHUẨN BỊ CÁC THAM SỐ TỪ URL ---
+    // $order_by_main = "";
+    // $order_by_fallback = "";
 
-// a. Tìm kiếm
-$q = isset($_GET['q']) ? $_GET['q'] : "";
-$search_param = "%" . $q . "%"; 
+    // // ƯU TIÊN 1: Sắp xếp theo Bình luận
+    // if ($sort_comment == "most_comment") {
+    //     $order_by_main = "comments_count DESC";
+    // } elseif ($sort_comment == "least_comment") {
+    //     $order_by_main = "comments_count ASC";
+    // } 
+    // // ƯU TIÊN 2: Sắp xếp theo Lượt thích (Chỉ xem xét nếu không chọn Bình luận)
+    // elseif ($sort_like == "most_like") {
+    //     $order_by_main = "likes_count DESC";
+    // } elseif ($sort_like == "least_like") {
+    //     $order_by_main = "likes_count ASC";
+    // } 
 
-// b. 3 Bộ lọc Sắp xếp Riêng biệt
-// Mặc định là 'newest' (Mới nhất)
-$sort_date = isset($_GET['sort_date']) ? $_GET['sort_date'] : "newest"; 
-$sort_like = isset($_GET['sort_like']) ? $_GET['sort_like'] : ""; // Mặc định rỗng
-$sort_comment = isset($_GET['sort_comment']) ? $_GET['sort_comment'] : ""; // Mặc định rỗng
+    // // ƯU TIÊN 3: Sắp xếp theo Ngày tạo (Nếu không có tiêu chí nào khác)
+    // elseif ($sort_date == "oldest") {
+    //     $order_by_main = "p.created_at ASC";
+    // } else {
+    //     // Mặc định hoặc 'newest'
+    //     $order_by_main = "p.created_at DESC";
+    // }
 
-// c. Bộ lọc theo ngày (Giữ nguyên)
-$from_date = isset($_GET['from_date']) && !empty($_GET['from_date']) ? $_GET['from_date'] : null;
-$to_date = isset($_GET['to_date']) && !empty($_GET['to_date']) ? $_GET['to_date'] : null;
+    // // Luôn dùng created_at làm tiêu chí phụ để đảm bảo thứ tự ổn định
+    // $order = "ORDER BY {$order_by_main}";
 
-$to_date_param = null;
-if ($to_date) {
-    $to_date_param = $to_date . " 23:59:59";
-}
-// d. Bộ lọc theo danh mục
-$category_id = isset($_GET['category_id']) && !empty($_GET['category_id']) ? $_GET['category_id'] : null;
+    // // --- 3. XÂY DỰNG QUERY SQL VÀ ĐIỀU KIỆN WHERE ĐỘNG (Giữ nguyên) ---
 
-if ($category_id) {
-    $where_clauses[] = "p.category_id = ?";
-    $bind_types .= 'i';      // category_id là integer
-    $bind_params[] = $category_id;
-}
+    // $where_clauses = []; 
+    // $bind_types = '';    
+    // $bind_params = [];   
+
+    // // a. Điều kiện Tìm kiếm (Luôn có - 3 tham số string)
+    // $where_clauses[] = "(p.name LIKE ? OR p.description LIKE ? )";
+    // $bind_types .= 'ss';
+    // $bind_params[] = $search_param;
+    // $bind_params[] = $search_param;
+
+    // $categories = [];
+    // $cat_query = mysqli_query($con, "SELECT id, name FROM categories ORDER BY name ASC");
+    // if ($cat_query) {
+    //     while($cat = mysqli_fetch_assoc($cat_query)){
+    //         $categories[] = $cat;
+    //     }
+    // }
+
+    // // b. Bộ lọc theo ngày BẮT ĐẦU 
+    // if ($from_date) {
+    //     $where_clauses[] = "p.created_at >= ?"; 
+    //     $bind_types .= 's'; 
+    //     $bind_params[] = $from_date;
+    // }
+
+    // // c. Bộ lọc theo ngày KẾT THÚC 
+    // if ($to_date_param) {
+    //     $where_clauses[] = "p.created_at <= ?";
+    //     $bind_types .= 's'; 
+    //     $bind_params[] = $to_date_param;
+    // }
+
+    // $where_sql = count($where_clauses) > 0 ? "WHERE " . implode(" AND ", $where_clauses) : "";
 
 
-// --- 2. XÂY DỰNG ĐIỀU KIỆN ORDER BY CHÍNH ---
+    // // Query chính:
+    // $sql = "
+    //     SELECT
+    //         p.id, p.name, p.description, p.created_at, p.slug, 
+    //         COUNT(DISTINCT c.id) AS comments_count,
+    //         COUNT(CASE WHEN pr.reaction = 'like' THEN 1 ELSE NULL END) AS likes_count
+    //     FROM
+    //         posts p
+    //     LEFT JOIN
+    //         comments c ON p.id = c.post_id
+    //     LEFT JOIN
+    //         post_reactions pr ON p.id = pr.source_id
+    //     {$where_sql}
+    //     GROUP BY
+    //         p.id, p.name, p.description, p.created_at, p.slug
+    //     {$order}
+    // ";
 
-$order_by_main = "";
-$order_by_fallback = "";
+    // // BẮT ĐẦU SỬ DỤNG PREPARED STATEMENT
+    // $stmt = mysqli_prepare($con, $sql);
 
-// ƯU TIÊN 1: Sắp xếp theo Bình luận
-if ($sort_comment == "most_comment") {
-    $order_by_main = "comments_count DESC";
-} elseif ($sort_comment == "least_comment") {
-    $order_by_main = "comments_count ASC";
-} 
-// ƯU TIÊN 2: Sắp xếp theo Lượt thích (Chỉ xem xét nếu không chọn Bình luận)
-elseif ($sort_like == "most_like") {
-    $order_by_main = "likes_count DESC";
-} elseif ($sort_like == "least_like") {
-    $order_by_main = "likes_count ASC";
-} 
+    // if ($stmt === false) {
+    //     die("<h3 style='color:red'>Prepared Statement Error:</h3>" . mysqli_error($con));
+    // }
 
-// ƯU TIÊN 3: Sắp xếp theo Ngày tạo (Nếu không có tiêu chí nào khác)
-elseif ($sort_date == "oldest") {
-    $order_by_main = "p.created_at ASC";
-} else {
-    // Mặc định hoặc 'newest'
-    $order_by_main = "p.created_at DESC";
-}
+    // // --- 4. BIND THAM SỐ ĐỘNG (Giữ nguyên) ---
+    // if (!empty($bind_params)) {
+    //     array_unshift($bind_params, $bind_types);
 
-// Luôn dùng created_at làm tiêu chí phụ để đảm bảo thứ tự ổn định
-$order = "ORDER BY {$order_by_main}, p.created_at DESC"; 
+    //     $refs = [];
+    //     foreach($bind_params as $key => $value) {
+    //         $refs[$key] = &$bind_params[$key]; 
+    //     }
 
-// --- 3. XÂY DỰNG QUERY SQL VÀ ĐIỀU KIỆN WHERE ĐỘNG (Giữ nguyên) ---
+    //     call_user_func_array([$stmt, 'bind_param'], $refs);
+    // }
 
-$where_clauses = []; 
-$bind_types = '';    
-$bind_params = [];   
 
-// a. Điều kiện Tìm kiếm (Luôn có - 3 tham số string)
-$where_clauses[] = "(p.name LIKE ? OR p.description LIKE ? )";
-$bind_types .= 'ss';
-$bind_params[] = $search_param;
-$bind_params[] = $search_param;
+    // mysqli_stmt_execute($stmt);
+    // $result = mysqli_stmt_get_result($stmt);
 
-$categories = [];
-$cat_query = mysqli_query($con, "SELECT id, name FROM categories ORDER BY name ASC");
-if ($cat_query) {
-    while($cat = mysqli_fetch_assoc($cat_query)){
-        $categories[] = $cat;
+    // if (!$result) {
+    //     die("<h3 style='color:red'>SQL Error:</h3>" . mysqli_error($con));
+    // }
+
+    include('admin/config/dbcon.php');
+
+    $filter = $_GET['filter'] ?? 'date';
+    $arrange = $_GET['arrange'] ?? 'desc';
+    $search = $_GET['q'] ?? '';
+    $fromDate = $_GET['from_date'] ?? null;
+    $toDate   = $_GET['to_date'] ?? null;
+
+    $search_param = "%$search%";
+
+    // Base query
+    $sql = "SELECT 
+        p.id,
+        p.name, 
+        p.slug, 
+        p.description, 
+        p.created_at, 
+        p.image, 
+        CONCAT(u.fname, ' ', u.lname) AS author,
+        c.name AS category_name,
+        COUNT(DISTINCT r.user_id) AS likes_count,
+        COUNT(DISTINCT cmt.id) AS comments_count
+    FROM posts p
+    JOIN users u ON p.user_id = u.id
+    JOIN categories c ON p.category_id = c.id
+    LEFT JOIN post_reactions r ON p.id = r.source_id
+    LEFT JOIN comments cmt ON p.id = cmt.post_id
+    WHERE (p.name LIKE ? 
+        OR p.description LIKE ? 
+        OR p.meta_title LIKE ? 
+        OR CONCAT(u.fname, ' ', u.lname) LIKE ? 
+        OR c.name LIKE ?)
+    AND p.status = 1";
+
+    // Thêm lọc theo ngày nếu có
+    $params = [$search_param, $search_param, $search_param, $search_param, $search_param];
+    $types = "sssss";
+
+    if ($fromDate && $toDate) {
+        $sql .= " AND p.created_at BETWEEN ? AND ?";
+        $params[] = $fromDate;
+        $params[] = $toDate;
+        $types .= "ss";
     }
-}
 
-// b. Bộ lọc theo ngày BẮT ĐẦU 
-if ($from_date) {
-    $where_clauses[] = "p.created_at >= ?"; 
-    $bind_types .= 's'; 
-    $bind_params[] = $from_date;
-}
+    // GROUP BY trước ORDER BY
+    $sql .= " GROUP BY p.id";
 
-// c. Bộ lọc theo ngày KẾT THÚC 
-if ($to_date_param) {
-    $where_clauses[] = "p.created_at <= ?";
-    $bind_types .= 's'; 
-    $bind_params[] = $to_date_param;
-}
-
-$where_sql = count($where_clauses) > 0 ? "WHERE " . implode(" AND ", $where_clauses) : "";
-
-
-// Query chính:
-$sql = "
-    SELECT
-        p.id, p.name, p.description, p.created_at, p.slug, 
-        COUNT(DISTINCT c.id) AS comments_count,
-        COUNT(CASE WHEN pr.reaction = 'like' THEN 1 ELSE NULL END) AS likes_count
-    FROM
-        posts p
-    LEFT JOIN
-        comments c ON p.id = c.post_id
-    LEFT JOIN
-        post_reactions pr ON p.id = pr.source_id
-    {$where_sql}
-    GROUP BY
-        p.id, p.name, p.description, p.created_at, p.slug
-    {$order}
-";
-
-// BẮT ĐẦU SỬ DỤNG PREPARED STATEMENT
-$stmt = mysqli_prepare($con, $sql);
-
-if ($stmt === false) {
-    die("<h3 style='color:red'>Prepared Statement Error:</h3>" . mysqli_error($con));
-}
-
-// --- 4. BIND THAM SỐ ĐỘNG (Giữ nguyên) ---
-if (!empty($bind_params)) {
-    array_unshift($bind_params, $bind_types);
-
-    $refs = [];
-    foreach($bind_params as $key => $value) {
-        $refs[$key] = &$bind_params[$key]; 
+    // Xử lý ORDER BY
+    $order_column = 'p.created_at'; // default
+    switch ($filter) {
+        case 'reaction':
+            $order_column = 'likes_count';
+            break;
+        case 'comment':
+            $order_column = 'comments_count';
+            break;
+        case 'date':
+        default:
+            $order_column = 'p.created_at';
+            break;
     }
 
-    call_user_func_array([$stmt, 'bind_param'], $refs);
-}
+    $order_dir = ($arrange === 'desc') ? 'DESC' : 'ASC';
+    $sql .= " ORDER BY $order_column $order_dir";
 
+    // Prepared statement
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param($types, ...$params);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-
-if (!$result) {
-    die("<h3 style='color:red'>SQL Error:</h3>" . mysqli_error($con));
-}
-include(__DIR__ . "/includes/header.php"); // Include Header
+    include("includes/header.php");
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Kết quả tìm kiếm</title>
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        .filter-row {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-end;
-            gap: 15px; /* Khoảng cách giữa các bộ lọc */
-        }
-        .filter-row > div {
-            margin-bottom: 10px;
-        }
-        .filter-row label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
 
 <div class="container mt-4">
-
-    <h3>Kết quả cho: <b><?= htmlspecialchars($q) ?></b></h3>
-
-    <form method="GET" class="mb-3">
-        <input type="hidden" name="q" value="<?= htmlspecialchars($q) ?>">
+    <form method="get" class="mb-3">
+        <input type="hidden" name="q" value="<?= htmlspecialchars($search) ?>">
         
-        <div class="filter-row">
+        <div class="filter-row d-flex">
             
-            <div>
-                <label>Theo Ngày:</label>
-                <select name="sort_date" onchange="this.form.submit()">
-                    <option value="newest" <?= ($sort_date == "newest" ? "selected" : "") ?>>Mới nhất</option>
-                    <option value="oldest" <?= ($sort_date == "oldest" ? "selected" : "") ?>>Cũ nhất</option>
+            <div class="mx-2">
+                <label label="filter">Sắp xếp:</label>
+                <select name="filter" onchange="this.form.submit()">
+                    <option value="reaction" <?= ($filter === "reaction" ? 'selected' : '') ?>>Tương tác</option>
+                    <option value="comment" <?= ($filter === "comment" ? 'selected' : '') ?>>Bình luận</option>
+                    <option value="date" <?= ($filter === "date" ? "selected" : "") ?>>Thời gian</option>
                 </select>
             </div>
 
-            <div>
+            <div class="mx-2">
+                <label for="arrange">Sắp xếp: </label>
+                <select name="arrange" onchange="this.form.submit()">
+                    <option value="desc" <?= ($arrange === 'desc' ? 'selected' : '') ?>>Giảm dần</option>
+                    <option value="asc" <?= ($arrange === 'asc' ? 'selected' : '') ?>>Tăng dần</option>
+                </select>
+            </div>
+
+            <!-- <div>
                 <label>Theo Lượt thích:</label>
                 <select name="sort_like" onchange="this.form.submit()">
                     <option value="" <?= ($sort_like == "" ? "selected" : "") ?>>--- Không chọn ---</option>
@@ -202,28 +256,28 @@ include(__DIR__ . "/includes/header.php"); // Include Header
                     <option value="most_comment" <?= ($sort_comment == "most_comment" ? "selected" : "") ?>>Nhiều nhất</option>
                     <option value="least_comment" <?= ($sort_comment == "least_comment" ? "selected" : "") ?>>Ít nhất</option>
                 </select>
-            </div>
-            <div>
-    <label>Danh mục:</label>
-    <select name="category_id" onchange="this.form.submit()">
-        <option value="">--- Tất cả ---</option>
-        <?php foreach ($categories as $cat): ?>
-            <option value="<?= $cat['id'] ?>" <?= ($category_id == $cat['id'] ? "selected" : "") ?>>
-                <?= htmlspecialchars($cat['name']) ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-</div>
+            </div> -->
+            <!-- <div>
+                <label>Danh mục:</label>
+                <select name="category_id" onchange="this.form.submit()">
+                    <option value="">--- Tất cả ---</option>
+                    <?php foreach ($categories as $cat): ?>
+                        <option value="<?= $cat['id'] ?>" <?= ($category_id == $cat['id'] ? "selected" : "") ?>>
+                            <?= htmlspecialchars($cat['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div> -->
 
 
-            <div>
+            <div class="mx-2">
                 <label for="from_date">Thời gian từ ngày:</label>
-                <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date ?? '') ?>">
+                <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($fromDate ?? '') ?>">
             </div>
 
-            <div>
+            <div class="mx-2">
                 <label for="to_date">Đến ngày:</label>
-                <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date ?? '') ?>">
+                <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($toDate ?? '') ?>">
             </div>
 
             <div>
@@ -231,27 +285,42 @@ include(__DIR__ . "/includes/header.php"); // Include Header
             </div>
         </div>
     </form>
+    
+    <h3>Kết quả cho: <b><?= htmlspecialchars($search) ?></b></h3>
 
     <hr>
 
     <?php if (mysqli_num_rows($result) > 0): ?>
         <?php while($row = mysqli_fetch_assoc($result)): ?>
-            <div class="result-item mb-3">
-                <h4><a href="single-blog.php?slug=<?= htmlspecialchars($row['slug']) ?>"><?= htmlspecialchars($row['name']) ?></a></h4>
-                <p><?= substr(strip_tags($row['description']), 0, 120) ?>...</p>
-                <div class="small text-muted">
-                    👍 <?= $row['likes_count'] ?> — 💬 <?= $row['comments_count'] ?> — <?= $row['created_at'] ?>
+            <div class="result-item mb-3 row">
+                <div class="col-4 d-flex justify-content-center align-items-center">
+                    <img src="uploads/posts/<?= $row['image'] ?>" alt="" style="height: 150px;">
                 </div>
-                <hr>
+                <div class="col-8">
+                    <h4><a href="single-blog.php?slug=<?= htmlspecialchars($row['slug']) ?>"><?= htmlspecialchars($row['name']) ?></a></h4>
+                    <p><?= substr(strip_tags($row['description']), 0, 120) ?>...</p>
+                    <div class="blog-post-meta">
+                    <ul>
+                        <li>By <a href="about.html"><?= $row['author'] ?></a></li>
+                        <li>
+                            <i class="fa fa-clock-o"></i>
+                            <?php 
+                                $created_at = strtotime($row['created_at']); 
+                                echo date('F j, Y, H:i', $created_at);
+                            ?>
+                        </li>
+                    </ul>
+                </div>
+                    <div class="small text-muted">
+                        👍 <?= $row['likes_count'] ?> — 💬 <?= $row['comments_count'] ?>
+                    </div>
+                </div>
             </div>
+            <hr>
         <?php endwhile; ?>
     <?php else: ?>
         <p>Không tìm thấy kết quả.</p>
     <?php endif; ?>
-    <?php 
-include(__DIR__ . "/includes/footer.php"); // Include Footer
-?>
 </div>
 
-</body>
-</html>
+<?php include(__DIR__ . "/includes/footer.php"); ?>
