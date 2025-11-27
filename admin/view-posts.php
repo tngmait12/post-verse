@@ -80,7 +80,7 @@ include('includes/header.php');
                                                 <td><?= $post['meta_description'] ?></td>
                                                 <td><?= $post['category_name'] ?></td>
                                                 <td>
-                                                    <?= $post['status'] == 0 ? "Visible" : "Hidden" ?>
+                                                    <?= $post['status'] == 1 ? "Visible" : "Hidden" ?>
                                                 </td>
 
                                                 <td>
@@ -89,10 +89,8 @@ include('includes/header.php');
                                                             href="edit-post.php?id=<?= $post['id']; ?>">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
-                                                        <form action="code.php" method="POST">
-                                                            <button type="submit" class="btn btn-link btn-danger"
-                                                                name="delete_post" value="<?= $post['id']; ?>"
-                                                                onclick="if(confirm('Are you sure want to delete this post?')){ this.form.submit(); }">
+                                                        <form action="code.php" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">
+                                                            <button type="" class="btn btn-link btn-danger" name="delete_post" value="<?= $post['id']; ?>">
                                                                 <i class="fa fa-times"></i>
                                                             </button>
                                                         </form>

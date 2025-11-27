@@ -1,9 +1,23 @@
+<?php
+if (isset($con)) {
+
+  $navbar_categories_query = "SELECT name, slug FROM categories WHERE navbar_status='1' AND status='1' LIMIT 4";
+  $navbar_categories_result = mysqli_query($con, $navbar_categories_query);
+} else {
+
+  $navbar_categories_result = false;
+}
+?>
 <section class="footer">
   <div class="container-fluid">
     <div class="row">
       <div class="col-lg-6 mx-auto text-center">
         <div class="footer-logo">
-          <img src="images/logo.svg" alt="logo" />
+          <a href="index.php" style="text-decoration: none; color: inherit;">
+            <h4 style="margin: 0; font-weight: bold; letter-spacing: 1px;">
+              POST VERSE
+            </h4>
+          </a>
         </div>
       </div>
     </div>
@@ -14,29 +28,17 @@
             <li class="nav-item">
               <a class="nav-link" href="index.html">Home </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="about.html">About </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="contact.html">Contact</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-6 mx-auto">
-        <div class="sociale-icon">
-          <ul>
-            <li>
-              <a href="#"><i class="fa fa-facebook"></i></a>
-            </li>
-            <li>
-              <a href="#"><i class="fa fa-twitter"></i></a>
-            </li>
-            <li>
-              <a href="#"><i class="fa fa-instagram"></i></a>
-            </li>
+            <?php
+            if ($navbar_categories_result && mysqli_num_rows($navbar_categories_result) > 0) {
+              foreach ($navbar_categories_result as $item) {
+            ?>
+                <li class="nav-item">
+                  <a class="nav-link" href="category.php?slug=<?= $item['slug']; ?>"><?= $item['name']; ?></a>
+                </li>
+            <?php
+              }
+            }
+            ?>
           </ul>
         </div>
       </div>
@@ -44,7 +46,9 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="copy-right">
-          <p>© Copyright <span id="copyrightYear"></span> - All Rights Reserved by <a href="https://staticmania.com/" target="_blank">StaticMania</a> Distributed By <a href="https://themewagon.com/" target="blank">ThemeWagon</a></p>
+          <p>
+            © Bản quyền <span id="copyrightYear"></span> - POST VERSE - Phát triển bởi Nhóm 3 - Project Phát triển Mã Nguồn mở
+          </p>
         </div>
       </div>
     </div>

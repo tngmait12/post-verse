@@ -4,7 +4,6 @@ include('config.php');
 
 $slug = $_GET["slug"] ?? '';
 
-// 1. Lấy thông tin chi tiết Danh mục (Category)
 $category_query = "SELECT * FROM categories WHERE slug='$slug' AND status='1' LIMIT 1";
 $category_result = mysqli_query($con, $category_query);
 $category_data = mysqli_fetch_assoc($category_result);
@@ -12,11 +11,8 @@ $category_data = mysqli_fetch_assoc($category_result);
 if ($category_data) {
     $category_id = $category_data['id'];
 
-    // Thiết lập SEO cho trang Category
     $page_title = $category_data['meta_title'];
 
-    // 2. Lấy danh sách Bài viết thuộc Danh mục này
-    // Lấy 10 bài viết/trang (Pagination sẽ được áp dụng sau)
     $posts_query = "
           SELECT 
               p.*, 
@@ -127,13 +123,13 @@ include('includes/header.php');
 
                 </div>
 
-                <?php include('includes/trending-post.php') ?>
+                <?php include('section/list-categories.php') ?>
             </div>
 
         <?php else : ?>
             <div class="alert alert-danger text-center py-5">
                 <h4 class="alert-heading">404 - Không tìm thấy Danh mục!</h4>
-                <p>Danh mục với slug **<?= $slug; ?>** không tồn tại hoặc đã bị ẩn.</p>
+                <p>Danh mục với slug <?= $slug; ?>không tồn tại hoặc đã bị ẩn.</p>
                 <a href="index.php" class="btn btn-primary mt-3">Quay về Trang chủ</a>
             </div>
         <?php endif; ?>

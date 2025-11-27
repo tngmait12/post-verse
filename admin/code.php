@@ -92,8 +92,8 @@ if (isset($_POST['add_category'])) {
 
     $description = $_POST['description'];
     $meta_title = $_POST['meta_title'];
-    $status = $_POST['status'] == true ? '1' : '0';
-    $navbar_status = $_POST['navbar_status'] == true ? '1' : '0';
+    $status = isset($_POST['status']) ? '1' : '0';
+    $navbar_status = isset($_POST['navbar_status']) == true ? '1' : '0';
 
     // Check if category name already exists
     $check_name_query = "SELECT name FROM categories WHERE name='$name' LIMIT 1";
@@ -104,7 +104,7 @@ if (isset($_POST['add_category'])) {
         exit(0);
     } else {
         $query = "INSERT INTO categories (name, slug, description, meta_title, navbar_status,status) VALUES 
-        ('$name', '$slug', '$description', '$meta_title', '$meta_description', '$navbar_status', '$status')";
+        ('$name', '$slug', '$description', '$meta_title', '$navbar_status', '$status')";
         $query_run = mysqli_query($con, $query);
 
         if ($query_run) {
@@ -184,7 +184,7 @@ if (isset($_POST['add_post'])) {
         $filename = time() . '.' . $image_extension;
 
     }
-    $query = "INSERT INTO posts (name, slug, description, image, meta_title, meta_description, meta_keyword, status,category_id, user_id) VALUES 
+    $query = "INSERT INTO posts (name, slug, description, image, meta_title, meta_description, status,category_id, user_id) VALUES 
     ('$name', '$slug', '$description', '$filename', '$meta_title', '$meta_description', '$status','$category_id', '$user_id')";
     $query_run = mysqli_query($con, $query);
     if ($query_run) {
@@ -262,11 +262,11 @@ if (isset($_POST['delete_post'])) {
         }
 
         $_SESSION['message'] = "Post Deleted Successfully";
-        header('Location: view-posts.php');
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit(0);
     } else {
         $_SESSION['message'] = "Post Not Deleted";
-        header('Location: view-posts.php');
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit(0);
     }
 }
