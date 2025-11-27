@@ -71,41 +71,37 @@
 ?>
 
 <div class="container mt-4">
-    <form method="get" class="mb-3">
-        <input type="hidden" name="q" value="<?= htmlspecialchars($search) ?>">
-        
-        <div class="input-group d-flex">
-            
-            <div class="mx-2">
-                <label class="form-label" for="filter" label="filter">Sắp xếp:</label>
-                <select class="form-select" id="filter" name="filter" onchange="this.form.submit()">
-                    <option value="reaction" <?= ($filter === "reaction" ? 'selected' : '') ?>>Tương tác</option>
-                    <option value="comment" <?= ($filter === "comment" ? 'selected' : '') ?>>Bình luận</option>
-                    <option value="date" <?= ($filter === "date" ? "selected" : "") ?>>Ngày đăng</option>
-                </select>
-            </div>
+    <form method="get" class="d-block d-lg-flex align-items-center">
+        <input type="hidden" name="q" value="<?= htmlspecialchars($search) ?>">  
+        <div class="mx-2 d-block d-lg-flex form-group align-items-center">
+            <label class="form-label" for="filter" label="filter">Lọc theo: </label>
+            <select class="form-control" id="filter" name="filter" onchange="this.form.submit()">
+                <option value="reaction" <?= ($filter === "reaction" ? 'selected' : '') ?>>Tương tác</option>
+                <option value="comment" <?= ($filter === "comment" ? 'selected' : '') ?>>Bình luận</option>
+                <option value="date" <?= ($filter === "date" ? "selected" : "") ?>>Ngày đăng</option>
+            </select>
+        </div>
 
-            <div class="mx-2">
-                <label class="form-label" for="arrange">Sắp xếp: </label>
-                <select class="form-select" id="arrange" name="arrange" onchange="this.form.submit()">
-                    <option value="desc" <?= ($arrange === 'desc' ? 'selected' : '') ?>>Giảm dần</option>
-                    <option value="asc" <?= ($arrange === 'asc' ? 'selected' : '') ?>>Tăng dần</option>
-                </select>
-            </div>
+        <div class="mx-2 d-block d-lg-flex form-group align-items-center">
+            <label class="form-label" for="arrange">Sắp xếp: </label>
+            <select class="form-control" id="arrange" name="arrange" onchange="this.form.submit()">
+                <option value="desc" <?= ($arrange === 'desc' ? 'selected' : '') ?>>Giảm dần</option>
+                <option value="asc" <?= ($arrange === 'asc' ? 'selected' : '') ?>>Tăng dần</option>
+            </select>
+        </div>
 
-            <div class="mx-2">
-                <labe for="from_date">Thời gian từ ngày:</labe>
-                <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($fromDate ?? '') ?>">
-            </div>
+        <div class="mx-2 d-block d-lg-flex form-group align-items-center">
+            <label class="form-label" for="from_date">Từ ngày: </label>
+            <input class="form-control" type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($fromDate ?? '') ?>">
+        </div>
 
-            <div class="mx-2">
-                <label for="to_date">Đến ngày:</label>
-                <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($toDate ?? '') ?>">
-            </div>
+        <div class="mx-2 d-block d-lg-flex form-group align-items-center">
+            <label class="form-label" for="to_date">Đến ngày: </label>
+            <input class="form-control" type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($toDate ?? '') ?>">
+        </div>
 
-            <div>
-                <button class="" type="submit">Lọc</button>
-            </div>
+        <div class="mx-2 d-block d-lg-flex form-group">
+            <button class="btn-info form-control" type="submit"> Lọc </button>
         </div>
     </form>
     
