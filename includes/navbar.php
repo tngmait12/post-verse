@@ -34,7 +34,7 @@ if (isset($con)) {
             required
             style="height: 35px; width: 120px;">
       
-      <button class=" d-flex align-items-center justify-content-center"
+      <button class=" d-flex align-items-center justify-content-center bg-primary border rounded-5"
         type="submit"
         style="height: 35px; width: 45px; padding: 0;"
       >
