@@ -116,44 +116,45 @@ header("single-blog.php?slug=" . urldecode($slug));
     display: none;
   }
 
-  div.btn_reac {
-    cursor: pointer;
-  }
-</style>
+    div.btn_reac {
+      cursor: pointer;
+    }
+  </style>
 
-<script>
-  document.addEventListener('click', function(e) {
-    var reac_status = null // status of reaction(like or dislike)
-    var source_reac = null // name table(post_reactions or comment_reactions)
-    var source_id = null // id of post or comment
+  <script>
+    document.addEventListener('click', function(e) {
+      let reac_status = null // status of reaction(like or dislike)
+      let source_reac = null // name table(post_reactions or comment_reactions)
+      let source_id = null // id of post or comment
 
-    btn = e.target.closest('.btn_reac')
-    if (!btn) return;
-    source_id = btn.getAttribute('data-id')
+      btn = e.target.closest('.btn_reac')
+      if (!btn) return;
+      source_id = btn.getAttribute('data-id')
 
-    parent_div = document.querySelector('.reaction-' + source_id)
-    if (!parent_div) return;
-    source_reac = parent_div.getAttribute('data-source')
+      parent_div = document.querySelector('.reaction-' + source_id)
+      if (!parent_div) return;
+      source_reac = parent_div.getAttribute('data-source')
 
-    reac_status = btn.getAttribute('data-status')
-    console.log(source_id, reac_status, source_reac)
+      reac_status = btn.getAttribute('data-status')
+      console.log(source_id, reac_status, source_reac)
 
-    const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'features/reaction-handle.php', true)
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-    xhr.send('source_id=' + source_id + '&reaction_status=' + reac_status + '&source=' + source_reac)
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        var get_status = JSON.parse(xhr.responseText)
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', 'features/reaction-handle.php', true)
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+      xhr.send('source_id=' + source_id + '&reaction_status=' + reac_status + '&source=' + source_reac)
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          let get_status = JSON.parse(xhr.responseText)
 
-        if (!get_status || get_status.status === 'error') return;
+          if (!get_status || get_status.status === 'error') return;
 
-        const xhr2 = new XMLHttpRequest()
-        xhr2.open('GET', 'features/reaction.php?source=' + source_reac + '&source_id=' + source_id, true)
-        xhr2.send()
-        xhr2.onload = function() {
-          if (xhr2.status === 200) {
-            parent_div.innerHTML = xhr2.responseText
+          const xhr2 = new XMLHttpRequest()
+          xhr2.open('GET', 'features/reaction.php?source=' + source_reac + '&source_id=' + source_id, true)
+          xhr2.send()
+          xhr2.onload = function() {
+            if (xhr2.status === 200) {
+              parent_div.innerHTML = xhr2.responseText
+            }
           }
         }
       }

@@ -3,8 +3,8 @@ $page = $_GET["page"] ?? 1;
 
 define('POSTS_IN_PAGE', 3);
 
-$count_post = "SELECT COUNT(*) AS count FROM posts WHERE status = 1";
-$count = (int)mysqli_query($con, $count_post)->fetch_assoc()['count'];
+    $count_post = "SELECT COUNT(*) AS count FROM posts WHERE status = 1";
+    $count = (int)mysqli_query($con, $count_post)->fetch_assoc()['count'];
 
 $pagination = ceil($count / POSTS_IN_PAGE);
 
