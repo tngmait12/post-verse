@@ -9,7 +9,7 @@ include('includes/header.php');
             <h3 class="fw-bold mb-3">Forms</h3>
             <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
-                    <a href="#">
+                    <a href="index.php">
                         <i class="icon-home"></i>
                     </a>
                 </li>
@@ -17,13 +17,13 @@ include('includes/header.php');
                     <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                    <a href="#">Forms</a>
+                    <a href="view-register.php">Users</a>
                 </li>
                 <li class="separator">
                     <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                    <a href="#">Basic Form</a>
+                    <a href="#">Edit User</a>
                 </li>
             </ul>
         </div>

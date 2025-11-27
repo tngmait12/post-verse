@@ -17,7 +17,7 @@ include('includes/header.php');
                     <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                    <a href="view-register.php">Categories</a>
+                    <a href="#">Categories</a>
                 </li>
             </ul>
         </div>
@@ -36,9 +36,7 @@ include('includes/header.php');
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table
-                                id="add-row"
-                                class="display table table-striped table-hover">
+                            <table id="add-row" class="display table table-striped table-hover">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -56,30 +54,26 @@ include('includes/header.php');
                                     $query_run = mysqli_query($con, $query);
                                     if (mysqli_num_rows($query_run) > 0) {
                                         foreach ($query_run as $cat) {
-                                    ?>
+                                            ?>
                                             <tr>
                                                 <td><?= $cat['id'] ?></td>
                                                 <td><?= $cat['name'] ?></td>
                                                 <td><?= $cat['slug'] ?></td>
                                                 <td><?= $cat['description'] ?></td>
                                                 <td>
-                                                    <?php 
-                                                    if($cat['navbar_status'] == '1')
-                                                    {
+                                                    <?php
+                                                    if ($cat['navbar_status'] == '1') {
                                                         echo 'On';
-                                                    }elseif($cat['navbar_status'] == '0')
-                                                    {
+                                                    } elseif ($cat['navbar_status'] == '0') {
                                                         echo 'Off';
                                                     }
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <?php 
-                                                    if($cat['status'] == '1')
-                                                    {
+                                                    <?php
+                                                    if ($cat['status'] == '1') {
                                                         echo 'On';
-                                                    }elseif($cat['status'] == '0')
-                                                    {
+                                                    } elseif ($cat['status'] == '0') {
                                                         echo 'Off';
                                                     }
                                                     ?>
@@ -87,27 +81,30 @@ include('includes/header.php');
 
                                                 <td>
                                                     <div class="form-button-action">
-                                                        <a class="btn btn-link btn-primary btn-lg" href="edit-category.php?id=<?= $cat['id']; ?>">
-                                                                <i class="fa fa-edit"></i>
+                                                        <a class="btn btn-link btn-primary btn-lg"
+                                                            href="edit-category.php?id=<?= $cat['id']; ?>">
+                                                            <i class="fa fa-edit"></i>
                                                         </a>
-                                                        <?php if($_SESSION['auth_role'] == '2') :?>
-                                                        <form action="code.php" method="POST">
-                                                            <button type="submit"  class="btn btn-link btn-danger" name="delete_category" value="<?= $cat['id']; ?>" onclick="if(confirm('Are you sure want to delete this category?')){ this.form.submit(); }">
-                                                                <i class="fa fa-times"></i>
-                                                            </button>
-                                                        </form>
+                                                        <?php if ($_SESSION['auth_role'] == '2'): ?>
+                                                            <form action="code.php" method="POST">
+                                                                <button type="submit" class="btn btn-link btn-danger"
+                                                                    name="delete_category" value="<?= $cat['id']; ?>"
+                                                                    onclick="if(confirm('Are you sure want to delete this category?')){ this.form.submit(); }">
+                                                                    <i class="fa fa-times"></i>
+                                                                </button>
+                                                            </form>
                                                         <?php endif; ?>
                                                     </div>
                                                 </td>
                                             </tr>
-                                        <?php
+                                            <?php
                                         }
                                     } else {
                                         ?>
                                         <tr>
                                             <td colspan="7">No Record Found</td>
                                         </tr>
-                                    <?php
+                                        <?php
                                     }
                                     ?>
                                 </tbody>

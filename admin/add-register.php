@@ -9,7 +9,7 @@ include('includes/header.php');
             <h3 class="fw-bold mb-3">Forms</h3>
             <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
-                    <a href="#">
+                    <a href="index.php">
                         <i class="icon-home"></i>
                     </a>
                 </li>
@@ -17,13 +17,13 @@ include('includes/header.php');
                     <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                    <a href="#">Forms</a>
+                    <a href="view-register.php">Users</a>
                 </li>
                 <li class="separator">
                     <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                    <a href="#">Basic Form</a>
+                    <a href="#">Add User</a>
                 </li>
             </ul>
         </div>
@@ -40,26 +40,30 @@ include('includes/header.php');
                                 <form action="code.php" method="POST">
                                     <div class="form-group">
                                         <label for="first_name" class="fw-bold">First Name</label>
-                                        <input type="text" class="form-control" id="first_name" name="fname" required  placeholder="Enter First Name">
+                                        <input type="text" class="form-control" id="first_name" name="fname" required
+                                            placeholder="Enter First Name">
                                     </div>
                                     <div class="form-group">
                                         <label for="last_name" class="fw-bold">Last Name</label>
-                                        <input type="text" class="form-control" id="last_name" name="lname" required  placeholder="Enter Last Name">
+                                        <input type="text" class="form-control" id="last_name" name="lname" required
+                                            placeholder="Enter Last Name">
                                     </div>
                                     <div class="form-group">
                                         <label for="email" class="fw-bold">Email address</label>
-                                        <input type="email" class="form-control" id="email" name="email" required  placeholder="Enter email">
+                                        <input type="email" class="form-control" id="email" name="email" required
+                                            placeholder="Enter email">
                                     </div>
                                     <div class="form-group">
                                         <label for="password" class="fw-bold">Password</label>
-                                        <input type="password" class="form-control" id="password" required name="password" placeholder="Password">
+                                        <input type="password" class="form-control" id="password" required
+                                            name="password" placeholder="Password">
                                     </div>
                                     <div class="form-group">
                                         <label for="role_as" class="fw-bold">Role</label>
                                         <select name="role_as" id="role_as" class="form-control">
                                             <option value="">--Select Role--</option>
-                                            <option value="1" >Admin</option>
-                                            <option value="0" >User</option>
+                                            <option value="1">Admin</option>
+                                            <option value="0">User</option>
                                         </select>
                                     </div>
                                     <div class="form-group mt-3">

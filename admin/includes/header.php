@@ -3,14 +3,59 @@
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Kaiadmin - Bootstrap 5 Admin Dashboard</title>
-    <meta
-        content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-        name="viewport" />
-    <link
-        rel="icon"
-        href="assets/img/kaiadmin/favicon.ico"
-        type="image/x-icon" />
+    <?php
+    $page = basename($_SERVER['SCRIPT_NAME']);
+    switch ($page) {
+        case 'index.php':
+            $title = "Dashboard";
+            break;
+        case 'view-register.php':
+            $title = "Users";
+            break;
+        case 'add-register.php':
+            $title = "Add User";
+            break;
+        case 'edit-register.php':
+            $title = "Edit User";
+            break;
+        case 'view-categories.php':
+            $title = "Categories";
+            break;
+        case 'add-category.php':
+            $title = "Add Category";
+            break;
+        case 'edit-category.php':
+            $title = "Edit Category";
+            break;
+        case 'view-posts.php':
+            $title = "Posts";
+            break;
+        case 'add-post.php':
+            $title = "Add Post";
+            break;
+        case 'edit-post.php':
+            $title = "Edit Post";
+            break;
+        case 'detail-post.php':
+            $title = "Post Details";
+            break;
+        case 'review-posts.php':
+            $title = "Review Posts";
+            break;
+        case 'profile.php':
+            $title = "Profile";
+            break;
+        case 'profile-edit.php':
+            $title = "Edit Profile";
+            break;
+        default:
+            $title = "Admin Panel";
+            break;
+    }
+    ?>
+    <title><?php echo $title ?> - Admin</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+    <link rel="icon" href="assets/img/favicon.svg" type="image/x-icon" />
 
     <!-- Fonts and icons -->
     <script src="assets/js/plugin/webfont/webfont.min.js"></script>
@@ -28,7 +73,7 @@
                 ],
                 urls: ["assets/css/fonts.min.css"],
             },
-            active: function() {
+            active: function () {
                 sessionStorage.fonts = true;
             },
         });
@@ -44,7 +89,7 @@
 
     <!-- <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet"> -->
-    
+
 </head>
 
 <body>

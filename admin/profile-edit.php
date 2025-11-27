@@ -40,13 +40,13 @@ if (isset($_SESSION['auth_user']['user_id'])) {
           <i class="icon-arrow-right"></i>
         </li>
         <li class="nav-item">
-          <a href="#">Tables</a>
+          <a href="profile.php">Profile</a>
         </li>
         <li class="separator">
           <i class="icon-arrow-right"></i>
         </li>
         <li class="nav-item">
-          <a href="#">Basic Form</a>
+          <a href="#">Edit Profile</a>
         </li>
       </ul>
     </div>
