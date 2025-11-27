@@ -62,10 +62,10 @@ include('includes/header.php');
 ?>
 <style>
     .btn-sm {
-    padding: 0.3rem 0.5rem !important; 
-    font-size: 0.875rem !important;
-    line-height: 1.5 !important;
-}
+        padding: 0.3rem 0.5rem !important;
+        font-size: 0.875rem !important;
+        line-height: 1.5 !important;
+    }
 </style>
 <div class="container mt-5 mb-5">
     <h2 class="mb-4">📋 Trang Cá Nhân:
@@ -80,11 +80,10 @@ include('includes/header.php');
                 <div class="card-body text-center">
 
                     <?php
-                    // Kiểm tra avatar
-                    $imageFile = $user_data['image'] ?? '';
-                    $imagePath = "uploads/users/" . $imageFile;
-                    if (!file_exists($imagePath) || empty($imageFile)) {
-                        $imagePath = "uploads/users/default.png";
+                    if (!empty($user_data['image'])) {
+                        $imagePath = "uploads/users/" . htmlspecialchars($user_data['image']);
+                    } else {
+                        $imagePath = "images/user.png";
                     }
                     ?>
 
@@ -118,10 +117,10 @@ include('includes/header.php');
 
                     <hr>
                     <?php if ($is_author_or_admin) : ?>
-                    <a href="bookmark.php" class="btn btn-warning btn-sm shadow-sm mb-2">
-                        <i class="fa fa-bookmark"></i> đã lưu
-                    </a>
-                    <a href="admin/profile-edit.php" class="btn btn-sm btn-outline-primary w-100">Chỉnh sửa Hồ sơ</a>
+                        <a href="bookmark.php" class="btn btn-warning btn-sm shadow-sm mb-2">
+                            <i class="fa fa-bookmark"></i> đã lưu
+                        </a>
+                        <a href="admin/profile-edit.php" class="btn btn-sm btn-outline-primary w-100">Chỉnh sửa Hồ sơ</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -133,9 +132,9 @@ include('includes/header.php');
                 <h3 class="mb-0">✍️ Các bài viết đã đăng</h3>
                 <div class="d-flex">
                     <?php if ($is_author_or_admin) : ?>
-                    <a href="admin/add-post.php" class="btn btn-primary btn-sm shadow-sm ml-3">
-                        <i class="fa fa-plus"></i> Tạo bài viết
-                    </a>
+                        <a href="admin/add-post.php" class="btn btn-primary btn-sm shadow-sm ml-3">
+                            <i class="fa fa-plus"></i> Tạo bài viết
+                        </a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -151,25 +150,25 @@ include('includes/header.php');
                             ?>
                             <img src="<?= $image_source ?>" alt="blog-thum" />
                         </div>
-                        
+
                         <div class="blog-post-content">
                             <div class="blog-post-tag">
                                 <a href="category.php?slug=<?php echo $row['category_slug']; ?>"><?= $row['category_name'] ?></a>
                                 <?php if ($is_author_or_admin) : ?>
-                                <a href="admin/edit-post.php?id=<?= $row['id'] ?>"
-                                    class="text-info text-decoration-none ml-2"
-                                    data-toggle="tooltip" data-placement="top" title="Chỉnh sửa">
-                                    <i class="fa fa-pencil fa-sm"></i>
-                                </a>
+                                    <a href="admin/edit-post.php?id=<?= $row['id'] ?>"
+                                        class="text-info text-decoration-none ml-2"
+                                        data-toggle="tooltip" data-placement="top" title="Chỉnh sửa">
+                                        <i class="fa fa-pencil fa-sm"></i>
+                                    </a>
 
-                                <form action="admin/code.php" method="POST" class="d-inline ml-1" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">
-                                    <button type="submit" name="delete_post" value="<?= $row['id']; ?>"
-                                        class="btn btn-danger btn-sm text-decoration-none ml-2 text-dark"
-                                        style="min-width: 40px !important;"
-                                        data-toggle="tooltip" data-placement="top" title="Xóa">
-                                        <i class="fa fa-trash-o fa-sm"></i>
-                                    </button>
-                                </form>
+                                    <form action="admin/code.php" method="POST" class="d-inline ml-1" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">
+                                        <button type="submit" name="delete_post" value="<?= $row['id']; ?>"
+                                            class="btn btn-danger btn-sm text-decoration-none ml-2 text-dark"
+                                            style="min-width: 40px !important;"
+                                            data-toggle="tooltip" data-placement="top" title="Xóa">
+                                            <i class="fa fa-trash-o fa-sm"></i>
+                                        </button>
+                                    </form>
                                 <?php endif; ?>
                             </div>
                             <div class="blog-post-title">

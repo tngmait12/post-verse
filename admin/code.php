@@ -93,7 +93,7 @@ if (isset($_POST['add_category'])) {
     $description = $_POST['description'];
     $meta_title = $_POST['meta_title'];
     $status = isset($_POST['status']) ? '1' : '0';
-    $navbar_status = isset($_POST['navbar_status']) == true ? '1' : '0';
+    $navbar_status = $_POST['navbar_status'] == true ? '1' : '0';
 
     // Check if category name already exists
     $check_name_query = "SELECT name FROM categories WHERE name='$name' LIMIT 1";
@@ -104,7 +104,7 @@ if (isset($_POST['add_category'])) {
         exit(0);
     } else {
         $query = "INSERT INTO categories (name, slug, description, meta_title, navbar_status,status) VALUES 
-        ('$name', '$slug', '$description', '$meta_title', '$navbar_status', '$status')";
+        ('$name', '$slug', '$description', '$meta_title', '$meta_description', '$navbar_status', '$status')";
         $query_run = mysqli_query($con, $query);
 
         if ($query_run) {
@@ -262,47 +262,51 @@ if (isset($_POST['delete_post'])) {
         }
 
         $_SESSION['message'] = "Post Deleted Successfully";
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        header('Location: view-posts.php');
         exit(0);
     } else {
         $_SESSION['message'] = "Post Not Deleted";
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        header('Location: view-posts.php');
         exit(0);
     }
 }
 
 // Profile
 if (isset($_POST['update_profile'])) {
-    $user_id = $_POST['user_id'];
-    $fname = $_POST['fname'];
-    $lname = $_POST['lname'];
-    $email = $_POST['email'];
-    $phone = $_POST['phone'];
+    $user_id = mysqli_real_escape_string($con, $_POST['user_id']);
+    $fname = mysqli_real_escape_string($con, $_POST['fname']);
+    $lname = mysqli_real_escape_string($con, $_POST['lname']);
+    $email = mysqli_real_escape_string($con, $_POST['email']);
+    $phone = mysqli_real_escape_string($con, $_POST['phone']);
 
-    $facebook = $_POST['facebook'];
-    $github = $_POST['github'];
-    $linkedin = $_POST['linkedin'];
+    $facebook = mysqli_real_escape_string($con, $_POST['facebook']);
+    $github = mysqli_real_escape_string($con, $_POST['github']);
+    $linkedin = mysqli_real_escape_string($con, $_POST['linkedin']);
 
-    $gender = $_POST['gender'];
+    $gender = mysqli_real_escape_string($con, $_POST['gender']);
 
-    $old_image = $_POST['old_image'];
+    $old_image = mysqli_real_escape_string($con, $_POST['old_image']);
     $new_image = $_FILES['image']['name'];
 
     $update_filename = "";
     if ($new_image != NULL) {
+        // Upload ảnh mới
         $image_extension = pathinfo($new_image, PATHINFO_EXTENSION);
         $filename = time() . '.' . $image_extension;
         $update_filename = $filename;
 
+        // Xóa ảnh cũ nếu có
         if ($old_image != NULL && file_exists('../uploads/users/' . $old_image)) {
             unlink('../uploads/users/' . $old_image);
         }
+        // Di chuyển file ảnh mới vào thư mục
         move_uploaded_file($_FILES['image']['tmp_name'], '../uploads/users/' . $filename);
     } else {
+        // Giữ lại ảnh cũ nếu không upload ảnh mới
         $update_filename = $old_image;
     }
 
-    // UPDATE users table
+    // Câu lệnh UPDATE users table
     $query = "UPDATE users SET 
                 fname='$fname', 
                 lname='$lname', 
@@ -315,6 +319,7 @@ if (isset($_POST['update_profile'])) {
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {
+        // Check if user exists in socials table
         $check_social = "SELECT * FROM socials WHERE user_id='$user_id'";
         $check_social_run = mysqli_query($con, $check_social);
 
@@ -345,51 +350,6 @@ if (isset($_POST['update_profile'])) {
     } else {
         $_SESSION['message'] = "Something Went Wrong!";
         header("Location: profile.php");
-        exit(0);
-    }
-}
-
-// Approve Post
-if (isset($_POST['approve_post'])) {
-    $post_id = mysqli_real_escape_string($con, $_POST['post_id']);
-
-    $query = "UPDATE posts SET status='1' WHERE id='$post_id' ";
-    $query_run = mysqli_query($con, $query);
-
-    if ($query_run) {
-        $_SESSION['message'] = "Post Approved Successfully";
-        header('Location: review-posts.php');
-        exit(0);
-    } else {
-        $_SESSION['message'] = "Post Not Approved";
-        header('Location: detail-post.php?id=' . $post_id);
-        exit(0);
-    }
-}
-
-// Delete Post Review
-if (isset($_POST['delete_post_review'])) {
-    $post_id = mysqli_real_escape_string($con, $_POST['post_id']);
-
-    $check_img_query = "SELECT * FROM posts WHERE id='$post_id' LIMIT 1";
-    $img_res = mysqli_query($con, $check_img_query);
-    $res_data = mysqli_fetch_array($img_res);
-    $image = $res_data['image'];
-
-    $query = "DELETE FROM posts WHERE id='$post_id' LIMIT 1";
-    $query_run = mysqli_query($con, $query);
-
-    if ($query_run) {
-        if (file_exists("../uploads/posts/" . $image)) {
-            unlink("../uploads/posts/" . $image);
-        }
-
-        $_SESSION['message'] = "Post Deleted Successfully";
-        header('Location: review-posts.php');
-        exit(0);
-    } else {
-        $_SESSION['message'] = "Post Not Deleted";
-        header('Location: detail-post.php?id=' . $post_id);
         exit(0);
     }
 }

@@ -16,7 +16,8 @@ if ($category_data) {
     $posts_query = "
           SELECT 
               p.*, 
-              c.name AS cname, 
+              c.name AS cname,
+              c.slug AS category_slug, 
               u.fname, 
               u.lname
           FROM posts p
@@ -79,11 +80,16 @@ include('includes/header.php');
                         <?php while ($row = mysqli_fetch_assoc($posts_result)) : ?>
                             <article class="blog-post">
                                 <div class="blog-post-thumb">
-                                    <img src="uploads/posts/<?= $row['image'] ?>" alt="blog-thum" />
+                                    <?php
+                                    $image_source = !empty($post_result['image'])
+                                        ? "uploads/posts/" . $post_result['image']
+                                        : "uploads/imgs/post.png";
+                                    ?>
+                                    <img src="<?= $image_source ?>" width="100%" alt="banner" />
                                 </div>
                                 <div class="blog-post-content">
                                     <div class="blog-post-tag">
-                                        <a href="#"><?= $row['cname'] ?></a>
+                                        <a href="category.php?slug=<?php echo $row['category_slug']; ?>"><?= $row['cname'] ?></a>
                                     </div>
                                     <div class="blog-post-title">
                                         <a href="single-blog.php?slug=<?php echo $row['slug'] ?>">
@@ -92,7 +98,7 @@ include('includes/header.php');
                                     </div>
                                     <div class="blog-post-meta">
                                         <ul>
-                                            <li>By <a href="about.html"><?= $row['fname'] . ' ' . $row['lname'] ?></a></li>
+                                            <li>By <a href="profile-user.php?id=<?= $row['user_id']; ?>"><?= $row['fname'] . ' ' . $row['lname'] ?></a></li>
                                             <li>
                                                 <i class="fa fa-clock-o"></i>
                                                 <?php

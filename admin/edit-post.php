@@ -87,7 +87,7 @@ include('includes/header.php');
                                                 <div class="form-group">
                                                     <label for="role_as" class="fw-bold">Category List</label>
                                                     <?php
-                                                    $category = "SELECT id, name FROM categories WHERE status='0' ";
+                                                    $category = "SELECT id, name FROM categories WHERE status='1' ";
                                                     $category_run = mysqli_query($con, $category);
                                                     if (mysqli_num_rows($category_run) > 0) {
                                                         ?>

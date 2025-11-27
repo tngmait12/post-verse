@@ -71,7 +71,9 @@ if (isset($con)) {
                 Account
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <?php if($_SESSION['auth_role'] == '1'): ?>
                 <a class="dropdown-item" href="<?= $base_url ?>/admin/index.php">Admin Page</a>
+                <?php endif; ?>
                 <a class="dropdown-item" href="profile-user.php?id=<?= $user_id; ?>">Profile</a>
                 <a class="dropdown-item" href="logout.php">Logout</a>
               </div>
