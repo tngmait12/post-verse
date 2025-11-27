@@ -18,7 +18,7 @@
       <div class="col-lg-8">
         <div class="blog-section-title">
           <h2>Articles</h2>
-          <p>View the latest news on Blogger</p>
+          <p>View the latest news on Post Verse</p>
         </div>
         <?php include('section/blog-post.php') ?>
       </div>

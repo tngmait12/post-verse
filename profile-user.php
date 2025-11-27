@@ -1,31 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <style> /* Cần phải có thẻ <style> */
-    .btn {
-        padding: 10px 20px !important;
-        margin: 3px;
-        min-width: 20px !important;
-        font-size: 14px !important;
-    }
-    </style>
-</head>
-<body>
-    </body>
-</html>
 <?php
 include('includes/config.php');
+include('config.php');
 
-// 1. KIỂM TRA ĐĂNG NHẬP
-if (!isset($_SESSION['auth_user']['user_id'])) {
-    $_SESSION['message'] = "Bạn cần đăng nhập để truy cập trang cá nhân.";
-    header("Location: login.php");
-    exit();
-}
+$page = $_GET["page"] ?? 1;
+define('POSTS_IN_PAGE', 3);
 
-$user_id = $_SESSION['auth_user']['user_id'];
+$user_id = $_GET['id'] ?? null;
+
 $user_data = [];
 $user_posts = [];
+
+$count_post = "SELECT COUNT(*) AS count FROM posts WHERE status = 1 and user_id = " . intval($user_id);
+$count = (int)mysqli_query($con, $count_post)->fetch_assoc()['count'];
+$pagination = ceil($count / POSTS_IN_PAGE);
 
 // --- A. LẤY THÔNG TIN NGƯỜI DÙNG (có avatar, phone, social, gender) ---
 $query_user = "SELECT fname, lname, email, created_at, image, phone, gender 
@@ -46,30 +33,42 @@ if ($stmt_user) {
 }
 
 // --- B. LẤY CÁC BÀI VIẾT CỦA NGƯỜI DÙNG ---
-$query_posts = "SELECT id, name, slug, description, image, created_at 
-                FROM posts 
-                WHERE user_id = ? 
-                ORDER BY created_at DESC";
-$stmt_posts = mysqli_prepare($con, $query_posts);
 
-if ($stmt_posts) {
-    mysqli_stmt_bind_param($stmt_posts, 'i', $user_id);
-    mysqli_stmt_execute($stmt_posts);
-    $result_posts = mysqli_stmt_get_result($stmt_posts);
+$query = 'SELECT p.*, u.fname, u.lname, c.name AS category_name , c.slug AS category_slug
+        FROM posts AS p 
+        JOIN users AS u ON p.user_id = u.id 
+        JOIN categories AS c ON p.category_id = c.id 
+        WHERE p.status = 1 and p.user_id = ?
+        ORDER BY p.id DESC
+        LIMIT ' . POSTS_IN_PAGE . ' 
+        OFFSET ' . (($page - 1) * POSTS_IN_PAGE);
 
-    if (mysqli_num_rows($result_posts) > 0) {
-        while($row = mysqli_fetch_assoc($result_posts)){
-            $user_posts[] = $row;
-        }
-    }
-    mysqli_stmt_close($stmt_posts);
-}
+//$stmt_posts = mysqli_prepare($con, $query_posts);
+
+$stmt = mysqli_prepare($con, $query);
+mysqli_stmt_bind_param($stmt, 'i', $user_id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$rows_result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+$count_post = count($rows_result);
+
+$current_user_id = $_SESSION['auth_user']['user_id'] ?? null;
+$current_user_role = $_SESSION['auth_user']['role_as'] ?? 0;
+
+$is_author_or_admin = ($current_user_id && ($current_user_id == $user_id || $current_user_role == 1));
 
 include('includes/header.php');
 ?>
-
+<style>
+    .btn-sm {
+    padding: 0.3rem 0.5rem !important; 
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+}
+</style>
 <div class="container mt-5 mb-5">
-    <h2 class="mb-4">📋 Trang Cá Nhân: 
+    <h2 class="mb-4">📋 Trang Cá Nhân:
         <?= htmlspecialchars($user_data['fname'] ?? '') . ' ' . htmlspecialchars($user_data['lname'] ?? '') ?>
     </h2>
     <hr>
@@ -80,7 +79,7 @@ include('includes/header.php');
             <div class="card shadow-sm mb-4">
                 <div class="card-body text-center">
 
-                    <?php 
+                    <?php
                     // Kiểm tra avatar
                     $imageFile = $user_data['image'] ?? '';
                     $imagePath = "uploads/users/" . $imageFile;
@@ -89,36 +88,41 @@ include('includes/header.php');
                     }
                     ?>
 
-                    <img src="<?= $imagePath ?>" 
-                         alt="Ảnh đại diện" 
-                         class="img-fluid rounded-circle"
-                         style="width: 150px; height: 150px; object-fit: cover;">
+                    <img src="<?= $imagePath ?>"
+                        alt="Ảnh đại diện"
+                        class="img-fluid rounded-circle"
+                        style="width: 150px; height: 150px; object-fit: cover;">
 
                     <h5 class="card-title mt-3">
                         <?= htmlspecialchars($user_data['fname'] ?? '') . ' ' . htmlspecialchars($user_data['lname'] ?? '') ?>
                     </h5>
 
                     <p class="card-text text-muted">
-                        <?= htmlspecialchars($user_data['email'] ?? 'N/A') ?>
+                        Email: <?= htmlspecialchars($user_data['email'] ?? 'N/A') ?>
                     </p>
 
                     <?php if (!empty($user_data['phone'])): ?>
-                        <p class="card-text">📞 <?= htmlspecialchars($user_data['phone']) ?></p>
+                        <p class="card-text">Phone Number: <?= htmlspecialchars($user_data['phone']) ?></p>
                     <?php endif; ?>
 
                     <?php if (!empty($user_data['gender'])): ?>
-                        <p class="card-text">⚧ <?= ucfirst($user_data['gender']) ?></p>
+                        <p class="card-text"><?= ucfirst($user_data['gender']) ?></p>
                     <?php endif; ?>
 
                     <small class="text-secondary">
-                        Thành viên từ: 
-                        <?= isset($user_data['created_at']) 
-                            ? date('d/m/Y', strtotime($user_data['created_at'])) 
+                        Thành viên từ:
+                        <?= isset($user_data['created_at'])
+                            ? date('d/m/Y', strtotime($user_data['created_at']))
                             : 'Không xác định'; ?>
                     </small>
 
                     <hr>
+                    <?php if ($is_author_or_admin) : ?>
+                    <a href="bookmark.php" class="btn btn-warning btn-sm shadow-sm mb-2">
+                        <i class="fa fa-bookmark"></i> đã lưu
+                    </a>
                     <a href="admin/profile-edit.php" class="btn btn-sm btn-outline-primary w-100">Chỉnh sửa Hồ sơ</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -126,66 +130,102 @@ include('includes/header.php');
         <!-- Bài viết của người dùng -->
         <div class="col-lg-8">
             <div class="d-flex justify-content-between align-items-center mb-2">
-    <h3 class="mb-0">✍️ Các bài viết đã đăng</h3>
-    <a href="admin/add-post.php" class="btn btn-primary ms-auto">
-        <i class="fa fa-plus"></i> Tạo bài viết mới
-    </a>
-</div>
-
-            <?php if (count($user_posts) > 0): ?>
-    <?php foreach ($user_posts as $post): ?>
-        <div class="card mb-3 shadow-sm">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h5 class="card-title">
-                            <a href="single-blog.php?slug=<?= htmlspecialchars($post['slug']) ?>" class="text-decoration-none">
-                                <?= htmlspecialchars($post['name']) ?>
-                            </a>
-                        </h5>
-                        <p class="card-text text-muted small mb-1">
-                            Ngày đăng: <?= date('d/m/Y', strtotime($post['created_at'])) ?>
-                        </p>
-                    </div>
-
-                    <!-- Nút Sửa / Xóa -->
-                    <div class="" role="group" ">
-                        <a href="admin/edit-post.php?id=<?= $post['id'] ?>" class="btn btn-sm btn-success" title="Chỉnh sửa bài viết">
-                            <i class="fa fa-pencil"></i> Sửa
-                        </a>
-                        <form action="admin/code.php" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">
-                            <input type="hidden" name="delete_post" value="<?= $post['id'] ?>">
-                            <button type="submit" class="btn btn-sm btn-danger" title="Xóa bài viết">
-                                <i class="fa fa-trash"></i> Xóa
-                            </button>
-                        </form>
-                    </div>
+                <h3 class="mb-0">✍️ Các bài viết đã đăng</h3>
+                <div class="d-flex">
+                    <?php if ($is_author_or_admin) : ?>
+                    <a href="admin/add-post.php" class="btn btn-primary btn-sm shadow-sm ml-3">
+                        <i class="fa fa-plus"></i> Tạo bài viết
+                    </a>
+                    <?php endif; ?>
                 </div>
-
-                <?php if (!empty($post['image']) && file_exists("uploads/posts/" . $post['image'])): ?>
-                    <img src="uploads/posts/<?= $post['image'] ?>" class="img-fluid mb-2" style="max-height:200px; object-fit:cover;">
-                <?php endif; ?>
-
-                <hr class="mt-2 mb-2">
-                <p class="card-text">
-               <?= substr(strip_tags($post['description'] ?? ''), 0, 150) ?>...
-
-                </p>
             </div>
-        </div>
-    <?php endforeach; ?>
-<?php else: ?>
-    <div class="alert alert-info">
-        Bạn chưa đăng bất kỳ bài viết nào.
-    </div>
-<?php endif; ?>
+
+            <?php if (count($rows_result) > 0): ?>
+                <?php foreach ($rows_result as $row): ?>
+                    <article class="blog-post">
+                        <div class="blog-post-thumb">
+                            <?php
+                            $image_source = !empty($row['image'])
+                                ? "uploads/posts/" . $row['image']
+                                : "uploads/imgs/post.png";
+                            ?>
+                            <img src="<?= $image_source ?>" alt="blog-thum" />
+                        </div>
+                        
+                        <div class="blog-post-content">
+                            <div class="blog-post-tag">
+                                <a href="category.php?slug=<?php echo $row['category_slug']; ?>"><?= $row['category_name'] ?></a>
+                                <?php if ($is_author_or_admin) : ?>
+                                <a href="admin/edit-post.php?id=<?= $row['id'] ?>"
+                                    class="text-info text-decoration-none ml-2"
+                                    data-toggle="tooltip" data-placement="top" title="Chỉnh sửa">
+                                    <i class="fa fa-pencil fa-sm"></i>
+                                </a>
+
+                                <form action="admin/code.php" method="POST" class="d-inline ml-1" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">
+                                    <button type="submit" name="delete_post" value="<?= $row['id']; ?>"
+                                        class="btn btn-danger btn-sm text-decoration-none ml-2 text-dark"
+                                        style="min-width: 40px !important;"
+                                        data-toggle="tooltip" data-placement="top" title="Xóa">
+                                        <i class="fa fa-trash-o fa-sm"></i>
+                                    </button>
+                                </form>
+                                <?php endif; ?>
+                            </div>
+                            <div class="blog-post-title">
+                                <a href="single-blog.php?slug=<?php echo $row['slug'] ?>">
+                                    <?php echo $row['name'] ?>
+                                </a>
+                            </div>
+                            <div class="blog-post-meta">
+                                <ul>
+                                    <li>By <a href="profile-user.php?id=<?= $row['user_id']; ?>"><?= $row['fname'] . ' ' . $row['lname'] ?></a></li>
+                                    <li>
+                                        <i class="fa fa-clock-o"></i>
+                                        <?php
+                                        $created_at = strtotime($row['created_at']);
+                                        echo date('F j, Y, H:i', $created_at);
+                                        ?>
+                                    </li>
+                                </ul>
+                            </div>
+                            <p>
+                                <?= $row['meta_description'] ?>
+                            </p>
+                            <a href="single-blog.php?slug=<?php echo $row['slug'] ?>" class="blog-post-action">read more <i class="fa fa-angle-right"></i></a>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+
+                <div class="blog-post-pagination">
+                    <nav aria-label="Page navigation example" class="nav-bg">
+                        <ul class="pagination">
+                            <?php if ($pagination > 1): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="index.php?page=<?= 1 ?>">
+                                        <i class="fa fa-angle-left"></i>
+                                    </a>
+                                </li>
+                                <?php for ($i = 1; $i <= $pagination; $i++): ?>
+                                    <li class="page-item"><a class="page-link <?php if ($i == $page) echo "active"; ?>" href="index.php?page=<?= $i ?>"><?= $i ?></a></li>
+                                <?php endfor; ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="index.php?page=<?= $pagination ?>">
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </nav>
+                </div>
+            <?php else: ?>
+                <h2>Không có bài viết nào</h2>
+            <?php endif; ?>
 
         </div>
     </div>
 </div>
 
-<?php 
+<?php
 include('includes/footer.php');
-include('includes/script.php');
 ?>
-
