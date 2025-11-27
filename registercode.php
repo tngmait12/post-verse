@@ -62,7 +62,7 @@ if (isset($_POST['register_btn'])) {
                     $mail->addAddress($email);
 
                     $mail->isHTML(true);
-                    $mail->Subject = "Xác thực tài khoản cho Nền tảng Post Verse";
+                    $mail->Subject = "Verify Email on Post Verse";
                     $mail->Body = "Xin chào <b>$fname $lname</b>,<br><br>"
                         . "Cảm ơn bạn đã đăng ký tài khoản tại Post Verse. Vui lòng nhấp vào liên kết dưới đây để xác thực địa chỉ email của bạn:<br>"
                         . "<a href='$verification_link'><b>Nhấn vào đây để xác thực</b></a>"

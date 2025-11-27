@@ -1,38 +1,44 @@
 <?php
-    $page = $_GET["page"] ?? 1;
+$page = $_GET["page"] ?? 1;
 
-    define('POSTS_IN_PAGE', 3);
+define('POSTS_IN_PAGE', 3);
 
     $count_post = "SELECT COUNT(*) AS count FROM posts WHERE status = 1";
     $count = (int)mysqli_query($con, $count_post)->fetch_assoc()['count'];
 
-    $pagination = ceil($count / POSTS_IN_PAGE);
+$pagination = ceil($count / POSTS_IN_PAGE);
 
-    $query = 'SELECT p.*, u.fname, u.lname, c.name AS category_name
-        FROM posts AS p
-        JOIN users AS u ON p.user_id = u.id
-        JOIN categories AS c ON p.category_id = c.id
+$query = 'SELECT p.*, u.fname, u.lname, c.name AS category_name , c.slug AS category_slug
+        FROM posts AS p 
+        JOIN users AS u ON p.user_id = u.id 
+        JOIN categories AS c ON p.category_id = c.id 
         WHERE p.status = 1
-        ORDER BY p.created_at DESC
-        LIMIT ' . POSTS_IN_PAGE . '
+        ORDER BY p.id DESC
+        LIMIT ' . POSTS_IN_PAGE . ' 
         OFFSET ' . (($page - 1) * POSTS_IN_PAGE);
 
+$stmt = mysqli_prepare($con, $query);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$rows_result = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    $stmt = mysqli_prepare($con, $query);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $rows_result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+$count_post = count($rows_result);
 ?>
 
 <?php if (count($rows_result) > 0): ?>
     <?php foreach ($rows_result as $row): ?>
         <article class="blog-post">
             <div class="blog-post-thumb">
-                <img src="uploads/posts/<?= $row['image'] ?>" alt="blog-thum" />
+                <?php
+                $image_source = !empty($row['image'])
+                    ? "uploads/posts/" . $row['image']
+                    : "uploads/imgs/post.png";
+                ?>
+                <img src="<?= $image_source ?>" alt="blog-thum" />
             </div>
             <div class="blog-post-content">
                 <div class="blog-post-tag">
-                    <a href="#"><?= $row['category_name'] ?></a>
+                    <a href="category.php?slug=<?php echo $row['category_slug']; ?>"><?= $row['category_name'] ?></a>
                 </div>
                 <div class="blog-post-title">
                     <a href="single-blog.php?slug=<?php echo $row['slug'] ?>">
@@ -41,12 +47,12 @@
                 </div>
                 <div class="blog-post-meta">
                     <ul>
-                        <li>By <a href="about.html"><?= $row['fname'] . ' ' . $row['lname'] ?></a></li>
+                        <li>By <a href="profile-user.php?id=<?= $row['user_id']; ?>"><?= $row['fname'] . ' ' . $row['lname'] ?></a></li>
                         <li>
                             <i class="fa fa-clock-o"></i>
-                            <?php 
-                                $created_at = strtotime($row['created_at']); 
-                                echo date('F j, Y, H:i', $created_at);
+                            <?php
+                            $created_at = strtotime($row['created_at']);
+                            echo date('F j, Y, H:i', $created_at);
                             ?>
                         </li>
                     </ul>
@@ -68,7 +74,7 @@
                             <i class="fa fa-angle-left"></i>
                         </a>
                     </li>
-                    <?php for($i = 1; $i <= $pagination; $i++): ?>
+                    <?php for ($i = 1; $i <= $pagination; $i++): ?>
                         <li class="page-item"><a class="page-link <?php if ($i == $page) echo "active"; ?>" href="index.php?page=<?= $i ?>"><?= $i ?></a></li>
                     <?php endfor; ?>
                     <li class="page-item">

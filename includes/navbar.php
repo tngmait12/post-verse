@@ -3,6 +3,9 @@ if (isset($con)) {
     
     $navbar_categories_query = "SELECT name, slug FROM categories WHERE navbar_status='1' AND status='1' LIMIT 4";
     $navbar_categories_result = mysqli_query($con, $navbar_categories_query);
+
+    $user_id = $_SESSION['auth_user']['user_id'] ?? null;
+
 } else {
     
     $navbar_categories_result = false;
@@ -67,8 +70,10 @@ if (isset($con)) {
                 Account
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <?php if($_SESSION['auth_role'] == '1'): ?>
                 <a class="dropdown-item" href="<?= $base_url ?>/admin/index.php">Admin Page</a>
-                <a class="dropdown-item" href="profile-user.php">Profile</a>
+                <?php endif; ?>
+                <a class="dropdown-item" href="profile-user.php?id=<?= $user_id; ?>">Profile</a>
                 <a class="dropdown-item" href="logout.php">Logout</a>
               </div>
             </li>

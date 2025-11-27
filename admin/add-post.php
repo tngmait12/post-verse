@@ -9,7 +9,7 @@ include('includes/header.php');
             <h3 class="fw-bold mb-3">Forms</h3>
             <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
-                    <a href="#">
+                    <a href="index.php">
                         <i class="icon-home"></i>
                     </a>
                 </li>
@@ -17,13 +17,13 @@ include('includes/header.php');
                     <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                    <a href="#">Forms</a>
+                    <a href="view-posts.php">Posts</a>
                 </li>
                 <li class="separator">
                     <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                    <a href="#">Basic Form</a>
+                    <a href="#">Add Post</a>
                 </li>
             </ul>
         </div>
@@ -40,11 +40,13 @@ include('includes/header.php');
                                 <form action="code.php" method="POST" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label for="name" class="fw-bold">Name</label>
-                                        <input type="text" class="form-control" id="name" name="name" required  placeholder="Enter Name">
+                                        <input type="text" class="form-control" id="name" name="name" required
+                                            placeholder="Enter Name">
                                     </div>
                                     <div class="form-group">
                                         <label for="slug" class="fw-bold">Slug (URL)</label>
-                                        <input type="text" class="form-control" id="slug" name="slug" required  placeholder="Enter Slug">
+                                        <input type="text" class="form-control" id="slug" name="slug" required
+                                            placeholder="Enter Slug">
                                     </div>
                                     <div class="form-group">
                                         <label for="slimageug" class="fw-bold">Image</label>
@@ -53,26 +55,27 @@ include('includes/header.php');
                                     <div class="form-group">
                                         <label for="description" class="fw-bold">Description</label>
                                         <textarea id="editor" name="description"></textarea>
-                                    </div>                                                                                  
+                                    </div>
                                     <div class="form-group">
                                         <label for="meta_title" class="fw-bold">Meta title</label>
-                                        <input type="text" class="form-control" id="meta_title" name="meta_title" placeholder="Enter Meta Title">
+                                        <input type="text" class="form-control" id="meta_title" name="meta_title"
+                                            placeholder="Enter Meta Title">
                                     </div>
                                     <div class="form-group">
                                         <label for="meta_description" class="fw-bold">Meta Description</label>
                                         <textarea name="meta_description"></textarea>
-                                    </div>  
+                                    </div>
                                     <div class="form-group">
                                         <label for="role_as" class="fw-bold">Category List</label>
                                         <?php 
-                                        $category = "SELECT id, name FROM categories WHERE status='0' ";
+                                        $category = "SELECT id, name FROM categories WHERE status='1' ";
                                         $category_run = mysqli_query($con, $category);
-                                        if(mysqli_num_rows($category_run) > 0){
+                                        if (mysqli_num_rows($category_run) > 0) {
                                             ?>
                                             <select name="category_id" required class="form-control">
                                                 <option value="">--Select Category--</option>
                                                 <?php
-                                                foreach($category_run as $cat_item){
+                                                foreach ($category_run as $cat_item) {
                                                     ?>
                                                     <option value="<?= $cat_item['id']; ?>"><?= $cat_item['name']; ?></option>
                                                     <?php
@@ -80,8 +83,7 @@ include('includes/header.php');
                                                 ?>
                                             </select>
                                             <?php
-                                        }
-                                        else{
+                                        } else {
                                             ?>
                                             <h5>No Category Available</h5>
                                             <?php

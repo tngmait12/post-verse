@@ -3,18 +3,19 @@ $slug = $_GET["slug"] ?? '';
 $source_reaction = 'post_reactions';
 
 include('includes/config.php');
+include('config.php');
 
-  $query = "SELECT p.*, u.fname, u.lname, c.name AS category_name 
+$query = "SELECT p.*, u.fname, u.lname, c.name AS category_name, c.slug AS category_slug 
     FROM posts AS p 
     JOIN users AS u ON p.user_id = u.id 
     JOIN categories AS c ON p.category_id = c.id 
     WHERE p.slug = ?";
 
-  $stmt = mysqli_prepare($con, $query);
-  mysqli_stmt_bind_param($stmt,'s', $slug);
-  mysqli_stmt_execute($stmt);
-  $result = mysqli_stmt_get_result($stmt);
-  $post_result = mysqli_fetch_assoc($result);
+$stmt = mysqli_prepare($con, $query);
+mysqli_stmt_bind_param($stmt, 's', $slug);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$post_result = mysqli_fetch_assoc($result);
 
 $source_id = $post_result['id'];
 
@@ -42,75 +43,78 @@ header("single-blog.php?slug=" . urldecode($slug));
 <section class="blog-single">
   <div class="container sticky">
     <div class="row">
-      <div class="col-lg-4 order-2 order-lg-2">
-        <div id="comments-section" class="border p-2 d-flex flex-column" 
+      <div class="col-lg-4 order-2">
+        <div id="comments-section" class="border p-2 d-flex flex-column"
           style="
             border-color: black; 
             border-radius: 20px; 
-            border-width: 20px;"
-          >
+            border-width: 20px;">
           <?php include "section/comment.php" ?>
         </div>
       </div>
-      <!-- post -->
-      <div class="col-lg-8 order-1 order-lg-1">
+      <div class="col-lg-8 order-1">
         <article class="single-blog">
-          <a href="#" class="tag"><?= $post_result['category_name'] ?></a>
+          <a href="category.php?slug=<?= $post_result['category_slug'] ?>" class="tag"><?= $post_result['category_name'] ?></a>
           <p class="title"><?= $post_result['name'] ?></p>
           <ul class="meta">
             <li>By <a href="about.html"><?= $post_result['fname'] . ' ' . $post_result['lname'] ?></a></li>
             <li>
               <i class="fa fa-clock-o"></i>
-              <?php 
-                  $created_at = strtotime($post_result['created_at']); 
-                  echo date('F j, Y, H:i', $created_at);
+              <?php
+              $created_at = strtotime($post_result['created_at']);
+              echo date('F j, Y, H:i', $created_at);
               ?>
             </li>
-            
+
             <!-- Bookmark -->
-              <li class="d-flex align-items-center ml-3">
-                <?php if (isset($_SESSION['auth'])) : ?>
-                  <form action="bookmark_code.php" method="POST" class="m-0 p-0 d-inline">
-                    <input type="hidden" name="post_id" value="<?= $source_id; ?>">
+            <li class="d-flex align-items-center ml-3">
+              <?php if (isset($_SESSION['auth'])) : ?>
+                <form action="bookmark_code.php" method="POST" class="m-0 p-0 d-inline">
+                  <input type="hidden" name="post_id" value="<?= $source_id; ?>">
 
-                    <button type="submit" name="bookmark_btn"
-                      class="btn btn-sm p-0 m-0 <?= $is_bookmarked ? 'btn-warning' : 'btn-outline-warning'; ?>"
-                      style="min-width: 40px !important;"
-                      data-toggle="tooltip" data-placement="top"
-                      title="<?= $is_bookmarked ? 'Bỏ Lưu Bài viết' : 'Lưu Bài viết'; ?>">
+                  <button type="submit" name="bookmark_btn"
+                    class="btn btn-sm p-0 m-0 <?= $is_bookmarked ? 'btn-warning' : 'btn-outline-warning'; ?>"
+                    style="min-width: 40px !important;"
+                    data-toggle="tooltip" data-placement="top"
+                    title="<?= $is_bookmarked ? 'Bỏ Lưu Bài viết' : 'Lưu Bài viết'; ?>">
 
-                      <i class="fa <?= $is_bookmarked ? 'fa-bookmark' : 'fa-bookmark-o'; ?>"></i>
-                    </button>
-                  </form>
-                <?php else : ?>
-                  <button type="button" class="btn btn-sm p-0 m-0 btn-outline-secondary" disabled
-                      style="min-width: 40px !important;"
-                    data-toggle="tooltip" data-placement="top" title="Đăng nhập để lưu">
-                    
-                    <i class="fa fa-bookmark-o"></i>
+                    <i class="fa <?= $is_bookmarked ? 'fa-bookmark' : 'fa-bookmark-o'; ?>"></i>
                   </button>
-                <?php endif; ?>
-              </li>
-              <!-- Bookmark -->
-            
-            <li class="flex-fill d-flex justify-content-end align-items-top">
+                </form>
+              <?php else : ?>
+                <button type="button" class="btn btn-sm p-0 m-0 btn-outline-secondary" disabled
+                  style="min-width: 40px !important;"
+                  data-toggle="tooltip" data-placement="top" title="Đăng nhập để lưu">
+
+                  <i class="fa fa-bookmark-o"></i>
+                </button>
+              <?php endif; ?>
+            </li>
+            <!-- Bookmark -->
+
+            <li class="d-flex justify-content-end align-items-top">
               <div class="reaction-<?= $source_id ?>" data-source="<?= $source_reaction ?>">
                 <?php include("features/reaction.php"); ?>
               </div>
             </li>
           </ul>
-          <img src="uploads/posts/<?= $post_result['image'] ?>" width="100%" alt="banner">
-          
+          <?php
+          $image_source = !empty($post_result['image'])
+            ? "uploads/posts/" . $post_result['image']
+            : "uploads/imgs/post.png";
+          ?>
+          <img src="<?= $image_source ?>" width="100%" alt="banner" />
+
           <div style="display: block;"><?= $post_result['description'] ?></div>
         </article>
       </div>
     </div>
-  </section>
+</section>
 
-  <style>
-    input[type="radio"] {
-      display: none;
-    }
+<style>
+  input[type="radio"] {
+    display: none;
+  }
 
     div.btn_reac {
       cursor: pointer;
@@ -154,13 +158,14 @@ header("single-blog.php?slug=" . urldecode($slug));
           }
         }
       }
-    })
-  </script>
-  <script>
-    // Khởi tạo Tooltip Bootstrap
-    $(function() {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
-  </script>
+    }
+  })
+</script>
+<script>
+  // Khởi tạo Tooltip Bootstrap
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
 
-  <?php include('includes/footer.php') ?>
+<?php include('includes/footer.php') ?>

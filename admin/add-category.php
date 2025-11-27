@@ -1,5 +1,5 @@
 <?php
-include('authentication.php');
+include('code-superadmin.php');
 include('includes/header.php');
 ?>
 
@@ -9,7 +9,7 @@ include('includes/header.php');
             <h3 class="fw-bold mb-3">Forms</h3>
             <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
-                    <a href="#">
+                    <a href="index.php">
                         <i class="icon-home"></i>
                     </a>
                 </li>
@@ -17,13 +17,13 @@ include('includes/header.php');
                     <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                    <a href="#">Forms</a>
+                    <a href="view-categories.php">Categories</a>
                 </li>
                 <li class="separator">
                     <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                    <a href="#">Basic Form</a>
+                    <a href="#">Add Category</a>
                 </li>
             </ul>
         </div>
@@ -40,19 +40,22 @@ include('includes/header.php');
                                 <form action="code.php" method="POST">
                                     <div class="form-group">
                                         <label for="name" class="fw-bold">Name</label>
-                                        <input type="text" class="form-control" id="name" name="name" required  placeholder="Enter Name">
+                                        <input type="text" class="form-control" id="name" name="name" required
+                                            placeholder="Enter Name">
                                     </div>
                                     <div class="form-group">
                                         <label for="slug" class="fw-bold">Slug (URL)</label>
-                                        <input type="text" class="form-control" id="slug" name="slug" required  placeholder="Enter Slug">
+                                        <input type="text" class="form-control" id="slug" name="slug" required
+                                            placeholder="Enter Slug">
                                     </div>
                                     <div class="form-group">
                                         <label for="description" class="fw-bold">Description</label>
                                         <textarea name="description"></textarea>
-                                    </div>                                                                                  
+                                    </div>
                                     <div class="form-group">
                                         <label for="meta_title" class="fw-bold">Meta title</label>
-                                        <input type="text" class="form-control" id="meta_title" name="meta_title" placeholder="Enter Meta Title">
+                                        <input type="text" class="form-control" id="meta_title" name="meta_title"
+                                            placeholder="Enter Meta Title">
                                     </div>
                                     <div class="form-group mt-3">
                                         <div class="form-check">
@@ -67,7 +70,8 @@ include('includes/header.php');
                                         </div>
                                     </div>
                                     <div class="card-action">
-                                        <button type="submit" name="add_category" class="btn btn-success">Submit</button>
+                                        <button type="submit" name="add_category"
+                                            class="btn btn-success">Submit</button>
                                         <a href="view-categories.php" class="btn btn-danger">Cancel</a>
                                     </div>
                                 </form>

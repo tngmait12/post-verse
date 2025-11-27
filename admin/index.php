@@ -1,5 +1,5 @@
 <?php
-include('authentication.php');
+include('code-superadmin.php');
 include('includes/header.php');
 
 // Đếm tổng số Categories
@@ -170,19 +170,10 @@ while ($row = mysqli_fetch_assoc($query_daily_posts_run)) {
 
 
 <?php
+include('includes/script.php');
 include('includes/footer.php');
 ?>
-<script src="assets/js/core/jquery-3.7.1.min.js"></script>
-<script src="assets/js/core/popper.min.js"></script>
-<script src="assets/js/core/bootstrap.min.js"></script>
 
-<!-- jQuery Scrollbar -->
-<script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-
-<!-- Chart JS -->
-<script src="assets/js/plugin/chart.js/chart.min.js"></script>
-
-<!-- Custom JS for Chart -->
 <script>
     $(document).ready(function () {
         // Statistics Chart
@@ -269,6 +260,3 @@ include('includes/footer.php');
         }
     });
 </script>
-</body>
-
-</html>

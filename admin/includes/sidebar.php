@@ -1,4 +1,8 @@
-<!-- Sidebar -->
+<?php 
+
+$user_role = $_SESSION['auth_role'];
+
+?>
 <div class="sidebar" data-background-color="dark">
     <?php $page = basename($_SERVER['SCRIPT_NAME']); ?>
     <div class="sidebar-logo">
@@ -36,6 +40,7 @@
                     </span>
                     <h4 class="text-section">Management</h4>
                 </li>
+                <?php if($user_role == '1'): ?>
                 <li class="nav-item <?= $page == 'view-register.php' ? 'active' : ''; ?>">
                     <a href="view-register.php">
                         <i class="fas fa-layer-group"></i>
@@ -60,10 +65,18 @@
                         <p>Review Posts</p>
                     </a>
                 </li>
+                <?php endif; ?>
                 <li class="nav-item <?= $page == 'profile.php' ? 'active' : ''; ?>">
                     <a href="profile.php">
                         <i class="fas fa-user"></i>
                         <p>Profile</p>
+                    </a>
+                </li>
+                
+                <li class="nav-item" style="margin-top: 15px; padding: 0px 10px;">
+                    <a href="../index.php" style="background: rgba(255, 255, 255, 0.1); border-radius: 5px;">
+                        <i class="fas fa-arrow-left" style="color: #fff;"></i>
+                        <p style="color: #fff;">Back to client</p>
                     </a>
                 </li>
             </ul>

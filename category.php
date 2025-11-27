@@ -4,7 +4,6 @@ include('config.php');
 
 $slug = $_GET["slug"] ?? '';
 
-// 1. Lấy thông tin chi tiết Danh mục (Category)
 $category_query = "SELECT * FROM categories WHERE slug='$slug' AND status='1' LIMIT 1";
 $category_result = mysqli_query($con, $category_query);
 $category_data = mysqli_fetch_assoc($category_result);
@@ -12,15 +11,13 @@ $category_data = mysqli_fetch_assoc($category_result);
 if ($category_data) {
     $category_id = $category_data['id'];
 
-    // Thiết lập SEO cho trang Category
     $page_title = $category_data['meta_title'];
 
-    // 2. Lấy danh sách Bài viết thuộc Danh mục này
-    // Lấy 10 bài viết/trang (Pagination sẽ được áp dụng sau)
     $posts_query = "
           SELECT 
               p.*, 
-              c.name AS cname, 
+              c.name AS cname,
+              c.slug AS category_slug, 
               u.fname, 
               u.lname
           FROM posts p
@@ -83,11 +80,16 @@ include('includes/header.php');
                         <?php while ($row = mysqli_fetch_assoc($posts_result)) : ?>
                             <article class="blog-post">
                                 <div class="blog-post-thumb">
-                                    <img src="uploads/posts/<?= $row['image'] ?>" alt="blog-thum" />
+                                    <?php
+                                    $image_source = !empty($post_result['image'])
+                                        ? "uploads/posts/" . $post_result['image']
+                                        : "uploads/imgs/post.png";
+                                    ?>
+                                    <img src="<?= $image_source ?>" width="100%" alt="banner" />
                                 </div>
                                 <div class="blog-post-content">
                                     <div class="blog-post-tag">
-                                        <a href="#"><?= $row['cname'] ?></a>
+                                        <a href="category.php?slug=<?php echo $row['category_slug']; ?>"><?= $row['cname'] ?></a>
                                     </div>
                                     <div class="blog-post-title">
                                         <a href="single-blog.php?slug=<?php echo $row['slug'] ?>">
@@ -96,7 +98,7 @@ include('includes/header.php');
                                     </div>
                                     <div class="blog-post-meta">
                                         <ul>
-                                            <li>By <a href="about.html"><?= $row['fname'] . ' ' . $row['lname'] ?></a></li>
+                                            <li>By <a href="profile-user.php?id=<?= $row['user_id']; ?>"><?= $row['fname'] . ' ' . $row['lname'] ?></a></li>
                                             <li>
                                                 <i class="fa fa-clock-o"></i>
                                                 <?php
@@ -133,7 +135,7 @@ include('includes/header.php');
         <?php else : ?>
             <div class="alert alert-danger text-center py-5">
                 <h4 class="alert-heading">404 - Không tìm thấy Danh mục!</h4>
-                <p>Danh mục với slug **<?= $slug; ?>** không tồn tại hoặc đã bị ẩn.</p>
+                <p>Danh mục với slug <?= $slug; ?>không tồn tại hoặc đã bị ẩn.</p>
                 <a href="index.php" class="btn btn-primary mt-3">Quay về Trang chủ</a>
             </div>
         <?php endif; ?>

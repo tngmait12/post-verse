@@ -20,7 +20,6 @@ if(isset($_GET['token']) && isset($_GET['email'])) {
         die("<div style='text-align:center; padding: 20px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;'>Token không hợp lệ hoặc đã hết hạn.</div>");
     }
 } else {
-    // Nếu không có token/email trên URL
     die("<div style='text-align:center; padding: 20px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;'>Yêu cầu không hợp lệ.</div>");
 }
 ?>
@@ -42,6 +41,7 @@ if(isset($_GET['token']) && isset($_GET['email'])) {
             <form method="POST" action="update_password.php">
                 
                 <input type="hidden" name="email" value="<?= htmlspecialchars($email) ?>">
+                <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
 
                 <div class="form-group">
                     <label for="new_password">Mật khẩu mới</label>

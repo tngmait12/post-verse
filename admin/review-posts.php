@@ -1,5 +1,5 @@
 <?php
-include('authentication.php');
+include('code-superadmin.php');
 include('includes/header.php');
 ?>
 
@@ -17,7 +17,7 @@ include('includes/header.php');
           <i class="icon-arrow-right"></i>
         </li>
         <li class="nav-item">
-          <a href="view-register.php">Posts</a>
+          <a href="#">Review Posts</a>
         </li>
       </ul>
     </div>
@@ -28,16 +28,6 @@ include('includes/header.php');
           <div class="card-header">
             <div class="d-flex align-items-center justify-content-between">
               <h4 class="card-title">Review Posts</h4>
-              <form action="" method="GET" class="d-flex">
-                <span>Filter status:</span>
-                <select name="status" class="form-control" onchange="this.form.submit()">
-                  <option value="">All</option>
-                  <option value="0" <?= isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : '' ?>>Not Approved
-                  </option>
-                  <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Approved
-                  </option>
-                </select>
-              </form>
             </div>
           </div>
           <div class="card-body">
@@ -54,12 +44,6 @@ include('includes/header.php');
                 </thead>
                 <tbody>
                   <?php
-                  $status_condition = "";
-                  if (isset($_GET['status']) && $_GET['status'] != '') {
-                    $status = mysqli_real_escape_string($con, $_GET['status']);
-                    $status_condition = " AND posts.status = '$status' ";
-                  }
-
                   $query = "
                             SELECT 
                                 posts.*, 
@@ -71,8 +55,7 @@ include('includes/header.php');
                             ON 
                                 posts.category_id = categories.id
                             WHERE 
-                                posts.status != '2'
-                                $status_condition
+                                posts.status = '0'
                             ORDER BY 
                                 posts.id DESC
                             ";
@@ -105,7 +88,7 @@ include('includes/header.php');
                   } else {
                     ?>
                     <tr>
-                      <td colspan="7">No Record Found</td>
+                      <td colspan="5">No Record Found</td>
                     </tr>
                     <?php
                   }

@@ -1,5 +1,5 @@
 <?php
-include('authentication.php');
+include('code-superadmin.php');
 include('includes/header.php');
 ?>
 
@@ -17,7 +17,7 @@ include('includes/header.php');
                     <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                    <a href="view-register.php">Posts</a>
+                    <a href="#">Posts</a>
                 </li>
             </ul>
         </div>
@@ -36,9 +36,7 @@ include('includes/header.php');
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table
-                                id="add-row"
-                                class="display table table-striped table-hover">
+                            <table id="add-row" class="display table table-striped table-hover">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -71,40 +69,42 @@ include('includes/header.php');
                                     $query_run = mysqli_query($con, $query);
                                     if (mysqli_num_rows($query_run) > 0) {
                                         foreach ($query_run as $post) {
-                                    ?>
+                                            ?>
                                             <tr>
                                                 <td><?= $post['id'] ?></td>
                                                 <td><?= $post['name'] ?></td>
                                                 <td>
-                                                    <img src="../uploads/posts/<?= $post['image'] ?>" width="100px" height="70px" alt="<?= $post['name'] ?>">
+                                                    <img src="../uploads/posts/<?= $post['image'] ?>" width="100px"
+                                                        height="70px" alt="<?= $post['name'] ?>">
                                                 </td>
                                                 <td><?= $post['meta_description'] ?></td>
                                                 <td><?= $post['category_name'] ?></td>
                                                 <td>
-                                                    <?= $post['status'] == 0 ? "Visible" : "Hidden" ?>
+                                                    <?= $post['status'] == 1 ? "Visible" : "Hidden" ?>
                                                 </td>
 
                                                 <td>
                                                     <div class="form-button-action">
-                                                        <a class="btn btn-link btn-primary btn-lg" href="edit-post.php?id=<?= $post['id']; ?>">
+                                                        <a class="btn btn-link btn-primary btn-lg"
+                                                            href="edit-post.php?id=<?= $post['id']; ?>">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
-                                                        <form action="code.php" method="POST">
-                                                            <button type="submit" class="btn btn-link btn-danger" name="delete_post" value="<?= $post['id']; ?>" onclick="if(confirm('Are you sure want to delete this post?')){ this.form.submit(); }">
+                                                        <form action="code.php" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">
+                                                            <button type="" class="btn btn-link btn-danger" name="delete_post" value="<?= $post['id']; ?>">
                                                                 <i class="fa fa-times"></i>
                                                             </button>
                                                         </form>
                                                     </div>
                                                 </td>
                                             </tr>
-                                        <?php
+                                            <?php
                                         }
                                     } else {
                                         ?>
                                         <tr>
                                             <td colspan="7">No Record Found</td>
                                         </tr>
-                                    <?php
+                                        <?php
                                     }
                                     ?>
                                 </tbody>
