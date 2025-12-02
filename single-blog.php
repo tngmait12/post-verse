@@ -157,7 +157,7 @@ header("single-blog.php?slug=" . urldecode($slug));
         }
       }
     }
-  })
+  )
 </script>
 <script>
   // Khởi tạo Tooltip Bootstrap
