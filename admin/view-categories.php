@@ -85,11 +85,11 @@ include('includes/header.php');
                                                             href="edit-category.php?id=<?= $cat['id']; ?>">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
-                                                        <?php if ($_SESSION['auth_role'] == '2'): ?>
-                                                            <form action="code.php" method="POST">
+                                                        <?php if ($_SESSION['auth_role'] == '1'): ?>
+                                                            <form action="code.php" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">
                                                                 <button type="submit" class="btn btn-link btn-danger"
                                                                     name="delete_category" value="<?= $cat['id']; ?>"
-                                                                    onclick="if(confirm('Are you sure want to delete this category?')){ this.form.submit(); }">
+                                                                    >
                                                                     <i class="fa fa-times"></i>
                                                                 </button>
                                                             </form>

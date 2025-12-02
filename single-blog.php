@@ -1,9 +1,9 @@
 <?php
 $slug = $_GET["slug"] ?? '';
 $source_reaction = 'post_reactions';
-
 include('includes/config.php');
 include('config.php');
+include('includes/header.php');
 
 $query = "SELECT p.*, u.fname, u.lname, c.name AS category_name, c.slug AS category_slug 
     FROM posts AS p 
@@ -34,8 +34,6 @@ if (isset($_SESSION['auth']) && isset($_SESSION['auth_user'])) {
     $is_bookmarked = true;
   }
 }
-
-include('includes/header.php');
 
 header("single-blog.php?slug=" . urldecode($slug));
 ?>

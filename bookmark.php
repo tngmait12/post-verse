@@ -80,7 +80,7 @@ include('includes/header.php');
                     $imageFile = $user_data['image'] ?? '';
                     $imagePath = "uploads/users/" . $imageFile;
                     if (!file_exists($imagePath) || empty($imageFile)) {
-                        $imagePath = "uploads/users/default.png";
+                        $imagePath = "images/user.png";
                     }
                     ?>
 

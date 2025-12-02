@@ -16,7 +16,7 @@
         <div class="latest-widget-title">
             <h2>List categories</h2>
         </div>
-        <div style="display: block; overflow-x: hidden; overflow-y: auto; height: 200px;">
+        <div style="display: block; overflow-x: hidden; overflow-y: auto; height: 300px;">
             <hr>
             <?php foreach ($categories as $row): ?>
                 <div>

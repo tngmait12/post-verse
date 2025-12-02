@@ -81,8 +81,8 @@ include('includes/header.php');
                             <article class="blog-post">
                                 <div class="blog-post-thumb">
                                     <?php
-                                    $image_source = !empty($post_result['image'])
-                                        ? "uploads/posts/" . $post_result['image']
+                                    $image_source = !empty($row['image'])
+                                        ? "uploads/posts/" . $row['image']
                                         : "uploads/imgs/post.png";
                                     ?>
                                     <img src="<?= $image_source ?>" width="100%" alt="banner" />

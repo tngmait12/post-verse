@@ -35,7 +35,7 @@ if (isset($con)) {
             placeholder="Search..."
             aria-label="Search"
             required
-            style="height: 35px; width: 300px;">
+            style="height: 35px; width: 200px;">
       
       <button class="form-control border btn-primary"
         type="submit"

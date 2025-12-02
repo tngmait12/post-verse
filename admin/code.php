@@ -93,7 +93,7 @@ if (isset($_POST['add_category'])) {
     $description = $_POST['description'];
     $meta_title = $_POST['meta_title'];
     $status = isset($_POST['status']) ? '1' : '0';
-    $navbar_status = $_POST['navbar_status'] == true ? '1' : '0';
+    $navbar_status = isset($_POST['navbar_status']) ? '1' : '0';
 
     // Check if category name already exists
     $check_name_query = "SELECT name FROM categories WHERE name='$name' LIMIT 1";
@@ -104,7 +104,7 @@ if (isset($_POST['add_category'])) {
         exit(0);
     } else {
         $query = "INSERT INTO categories (name, slug, description, meta_title, navbar_status,status) VALUES 
-        ('$name', '$slug', '$description', '$meta_title', '$meta_description', '$navbar_status', '$status')";
+        ('$name', '$slug', '$description', '$meta_title', '$navbar_status', '$status')";
         $query_run = mysqli_query($con, $query);
 
         if ($query_run) {
@@ -149,7 +149,7 @@ if (isset($_POST['update_category'])) {
 if (isset($_POST['delete_category'])) {
     $category_id = mysqli_real_escape_string($con, $_POST['delete_category']);
 
-    $query = "UPDATE categories SET status='2' WHERE id='$category_id' ";
+    $query = "DELETE FROM categories WHERE id='$category_id' LIMIT 1";
     $query_run = mysqli_query($con, $query);
 
     if ($query_run) {
@@ -182,7 +182,6 @@ if (isset($_POST['add_post'])) {
     if ($image != NULL) {
         $image_extension = pathinfo($image, PATHINFO_EXTENSION);
         $filename = time() . '.' . $image_extension;
-
     }
     $query = "INSERT INTO posts (name, slug, description, image, meta_title, meta_description, status,category_id, user_id) VALUES 
     ('$name', '$slug', '$description', '$filename', '$meta_title', '$meta_description', '$status','$category_id', '$user_id')";
@@ -202,17 +201,20 @@ if (isset($_POST['add_post'])) {
 }
 
 if (isset($_POST['edit_post'])) {
-    $post_id = $_POST['post_id'];
-    $category_id = $_POST['category_id'];
-    $name = $_POST['name'];
 
-    $string = preg_replace('/[^A-Za-z0-9\-]/', '-', $_POST['slug']); //Remove all special character
+    $post_id = mysqli_real_escape_string($con, $_POST['post_id']); 
+    $category_id = mysqli_real_escape_string($con, $_POST['category_id']);
+
+    $name = mysqli_real_escape_string($con, $_POST['name']);
+    $slug = mysqli_real_escape_string($con, $_POST['slug']);
+    $description = mysqli_real_escape_string($con, $_POST['description']); 
+    $meta_title = mysqli_real_escape_string($con, $_POST['meta_title']);
+    $meta_description = mysqli_real_escape_string($con, $_POST['meta_description']);
+
+
+    $string = preg_replace('/[^A-Za-z0-9\-]/', '-', $slug); //Remove all special character
     $final_string = preg_replace('/-+/', '-', $string);
     $slug = $final_string;
-
-    $description = $_POST['description'];
-    $meta_title = $_POST['meta_title'];
-    $meta_description = $_POST['meta_description'];
 
     $new_image = $_FILES['image']['name'];
     $old_image = $_POST['old_image'];
@@ -353,4 +355,48 @@ if (isset($_POST['update_profile'])) {
         exit(0);
     }
 }
-?>
+
+// Approve Post
+if (isset($_POST['approve_post'])) {
+    $post_id = mysqli_real_escape_string($con, $_POST['post_id']);
+
+    $query = "UPDATE posts SET status='1' WHERE id='$post_id' ";
+    $query_run = mysqli_query($con, $query);
+
+    if ($query_run) {
+        $_SESSION['message'] = "Post Approved Successfully";
+        header('Location: review-posts.php');
+        exit(0);
+    } else {
+        $_SESSION['message'] = "Post Not Approved";
+        header('Location: detail-post.php?id=' . $post_id);
+        exit(0);
+    }
+}
+
+// Delete Post Review
+if (isset($_POST['delete_post_review'])) {
+    $post_id = mysqli_real_escape_string($con, $_POST['post_id']);
+
+    $check_img_query = "SELECT * FROM posts WHERE id='$post_id' LIMIT 1";
+    $img_res = mysqli_query($con, $check_img_query);
+    $res_data = mysqli_fetch_array($img_res);
+    $image = $res_data['image'];
+
+    $query = "DELETE FROM posts WHERE id='$post_id' LIMIT 1";
+    $query_run = mysqli_query($con, $query);
+
+    if ($query_run) {
+        if (file_exists("../uploads/posts/" . $image)) {
+            unlink("../uploads/posts/" . $image);
+        }
+
+        $_SESSION['message'] = "Post Deleted Successfully";
+        header('Location: review-posts.php');
+        exit(0);
+    } else {
+        $_SESSION['message'] = "Post Not Deleted";
+        header('Location: detail-post.php?id=' . $post_id);
+        exit(0);
+    }
+}
